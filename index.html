@@ -201,16 +201,13 @@ button{cursor:pointer;font-family:'Nunito',sans-serif}
   </div>
 
   <div class="csec">
-    <div class="ctitc" style="color:#6BCB77">☁️ Supabase — Conexión</div>
-    <div style="font-size:11.5px;color:rgba(255,255,255,.5);margin-bottom:10px;line-height:1.6">
-      Ingresa tu <b style="color:#4D96FF">URL</b> y <b style="color:#4D96FF">Anon Key</b> de Supabase para sincronizar datos en la nube.
+    <div class="ctitc" style="color:#6BCB77">☁️ Supabase — Conectado</div>
+    <div style="font-size:11.5px;color:rgba(255,255,255,.6);line-height:1.6">
+      ✅ Base de datos configurada automáticamente<br>
+      📡 Los datos se sincronizan en la nube cada 30 segundos
     </div>
-    <input class="cinput" id="supaUrl" type="url" placeholder="https://xxxxxxxxxxxx.supabase.co"/>
-    <input class="cinput" id="supaKey" type="text" placeholder="anon key..."/>
-    <div class="cbtnrow">
-      <button class="cbtn cbtn-save" onclick="guardarConfig()">💾 Guardar</button>
-      <button class="cbtn cbtn-test" onclick="probarConexion()">🔌 Probar</button>
-      <button class="cbtn cbtn-del"  onclick="borrarConfig()">✕</button>
+    <div style="margin-top:10px">
+      <button class="cbtn cbtn-test" onclick="probarConexion()" style="margin-bottom:6px">🔌 Probar conexión</button>
     </div>
     <div class="cstatus" id="cst"></div>
   </div>
@@ -383,28 +380,19 @@ const FRASES = [
 // ═══════════════════════════════════════════════════════
 let supabase = null;
 
-function getConfig() {
-  const url = localStorage.getItem("supabase_url") || "";
-  const key = localStorage.getItem("supabase_key") || "";
-  return { url, key };
-}
+const SUPABASE_URL = "https://dysbrehrmumijbkkhbzs.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5c2JyZWhybXVtaWpia2toYnpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzODg0NjQsImV4cCI6MjA5OTk2NDQ2NH0.C-0502AFKhXqak9JTVR2Ypz-aEJfQUWir3o0gL_egHk";
 
 function initSupabase() {
-  const { url, key } = getConfig();
-  if (url && key) {
-    try {
-      supabase = supabaseJs.createClient(url, key);
-      return true;
-    } catch(e) {
-      supabase = null;
-      return false;
-    }
+  try {
+    supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_KEY);
+    return true;
+  } catch(e) {
+    supabase = null;
+    return false;
   }
-  supabase = null;
-  return false;
 }
 
-// Inicializar al cargar
 initSupabase();
 
 // ═══════════════════════════════════════════════════════
@@ -627,40 +615,16 @@ setInterval(rotateFrase, 60000);
 // CONFIG SUPABASE
 // ═══════════════════════════════════════════════════════
 function guardarConfig() {
-  const url = document.getElementById("supaUrl").value.trim();
-  const key = document.getElementById("supaKey").value.trim();
-  if (!url || !key) {
-    mostrarCSt("⚠️ Completa ambos campos", "#FF8787");
-    return;
-  }
-  localStorage.setItem("supabase_url", url);
-  localStorage.setItem("supabase_key", key);
-  initSupabase();
-  mostrarCSt("✅ Config guardada. Sincronizando...", "#6BCB77");
-  badge("☁️ Supabase activo", "rgba(255,255,255,.35)");
-  sincronizar();
+  mostrarCSt("✅ Supabase configurado automáticamente", "#6BCB77");
 }
 
 function borrarConfig() {
-  localStorage.removeItem("supabase_url");
-  localStorage.removeItem("supabase_key");
-  document.getElementById("supaUrl").value = "";
-  document.getElementById("supaKey").value = "";
-  supabase = null;
-  badge("💾 Local", "rgba(255,255,255,.35)");
-  mostrarCSt("🗑️ Config eliminada", "#FF8787");
+  mostrarCSt("ℹ️ La conexión a Supabase está fija en la app", "rgba(255,255,255,.6)");
 }
 
 async function probarConexion() {
-  const url = document.getElementById("supaUrl").value.trim();
-  const key = document.getElementById("supaKey").value.trim();
-  if (!url || !key) {
-    mostrarCSt("⚠️ Completa ambos campos primero", "#FF8787");
-    return;
-  }
   try {
-    const testClient = supabaseJs.createClient(url, key);
-    const { error } = await testClient.from("ventas").select("fecha", { count: "exact", head: true });
+    const { error } = await supabase.from("ventas").select("fecha", { count: "exact", head: true });
     if (error) {
       mostrarCSt("❌ Error: " + error.message, "#FF8787");
     } else {
@@ -1136,9 +1100,6 @@ function ir(v) {
   if (v==="fiados")    pintarFiados();
   if (v==="config") {
     document.getElementById("frase-cfg").textContent = FRASES[fraseI] || "";
-    const { url, key } = getConfig();
-    if (url) document.getElementById("supaUrl").value = url;
-    if (key) document.getElementById("supaKey").value = key;
   }
 }
 
@@ -1149,10 +1110,8 @@ cargar();
 rotateFrase();
 pintarVentas();
 
-if (getConfig().url && getConfig().key) {
-  badge("☁️ Supabase activo", "rgba(255,255,255,.35)");
-  sincronizar();
-}
+badge("☁️ Supabase activo", "rgba(255,255,255,.35)");
+sincronizar();
 </script>
 </body>
 </html>
