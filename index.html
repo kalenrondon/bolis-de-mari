@@ -12,11 +12,6 @@
 <link rel="apple-touch-icon" href="icon.svg">
 <title>Bolis de Mari 🧊</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Pacifico&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script>
-(function(){const d=document.createElement('div');d.id='dbg';d.style.cssText='position:fixed;top:0;left:0;right:0;z-index:9999;background:rgba(0,0,0,.85);color:#0f0;font:11px monospace;padding:6px 10px;max-height:120px;overflow-y:auto;border-bottom:2px solid #f00;white-space:pre-wrap';document.body.prepend(d);const log=console.log,err=console.error,warn=console.warn;console.log=function(){log.apply(console,arguments);d.innerHTML+='📌 '+Array.from(arguments).join(' ')+'\n';d.scrollTop=d.scrollHeight};console.error=function(){err.apply(console,arguments);d.innerHTML+='❌ '+Array.from(arguments).join(' ')+'\n';d.scrollTop=d.scrollHeight};console.warn=function(){warn.apply(console,arguments);d.innerHTML+='⚠️ '+Array.from(arguments).join(' ')+'\n';d.scrollTop=d.scrollHeight};d.innerHTML='⏳ Cargando...\n'})()
-</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{background:linear-gradient(160deg,#0a0f1e,#0d1b2a 40%,#112240);min-height:100vh;font-family:'Nunito',sans-serif;color:#fff;padding-bottom:80px}
@@ -277,6 +272,8 @@ button{cursor:pointer;font-family:'Nunito',sans-serif}
   </div>
 </div>
 
+<script async src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════
 // CONFIGURACIÓN
@@ -386,22 +383,30 @@ let supabase = null;
 const SUPABASE_URL = "https://dysbrehrmumijbkkhbzs.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5c2JyZWhybXVtaWpia2toYnpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzODg0NjQsImV4cCI6MjA5OTk2NDQ2NH0.C-0502AFKhXqak9JTVR2Ypz-aEJfQUWir3o0gL_egHk";
 
-function initSupabase() {
+function initSupabase(retries) {
+  retries = retries || 0;
   try {
-    const lib = window.supabase || window.supabaseJs;
-    if (!lib || !lib.createClient) throw new Error("Supabase lib not loaded");
+    var lib = window.supabase || window.supabaseJs;
+    if (!lib || !lib.createClient) {
+      if (retries < 20) {
+        console.log("⏳ Esperando supabase lib... ("+(retries+1)+"/20)");
+        setTimeout(function(){initSupabase(retries+1)}, 500);
+        return false;
+      }
+      throw new Error("Supabase lib not loaded after 10s");
+    }
     supabase = lib.createClient(SUPABASE_URL, SUPABASE_KEY);
+    console.log("✅ Supabase listo");
     return true;
   } catch(e) {
-    console.warn("Supabase init error:", e);
+    console.warn("❌ Supabase init error:", e);
     supabase = null;
     return false;
   }
 }
 
 initSupabase();
-console.log("supabase lib object keys:", Object.keys(window.supabase || {}).slice(0,10));
-console.log("supabase client created:", supabase ? "SI" : "NO");
+console.log("supabase lib:", typeof window.supabase, typeof window.supabaseJs);
 
 // ═══════════════════════════════════════════════════════
 // ESTADO GLOBAL
@@ -1122,6 +1127,19 @@ pintarVentas();
 
 badge("☁️ Supabase activo", "rgba(255,255,255,.35)");
 sincronizar();
+</script>
+<script>
+(function(){
+  var d=document.createElement('div');
+  d.id='dbg';
+  d.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;background:rgba(0,0,0,0.9);color:#0f0;font:bold 13px monospace;padding:8px 12px;max-height:150px;overflow-y:auto;border-bottom:3px solid #f00;white-space:pre-wrap';
+  document.body.prepend(d);
+  var log=console.log,err=console.error,warn=console.warn;
+  console.log=function(){log.apply(console,arguments);d.innerHTML+='📌 '+Array.from(arguments).join(' ')+'\n';d.scrollTop=d.scrollHeight};
+  console.error=function(){err.apply(console,arguments);d.innerHTML+='❌ '+Array.from(arguments).join(' ')+'\n';d.scrollTop=d.scrollHeight};
+  console.warn=function(){warn.apply(console,arguments);d.innerHTML+='⚠️ '+Array.from(arguments).join(' ')+'\n';d.scrollTop=d.scrollHeight};
+  d.innerHTML='⏳ Cargando...\n';
+})();
 </script>
 </body>
 </html>
