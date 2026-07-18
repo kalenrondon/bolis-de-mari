@@ -111,7 +111,10 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
 <div id="v-fiados" style="display:none">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
     <div class="ctit" style="margin:0">📒 Fiados</div>
-    <button onclick="abrirModalNuevoFiado()" style="background:#FFD93D;color:#000;border:none;padding:6px 12px;border-radius:8px;font-weight:800;font-size:12px">+ Nuevo</button>
+    <div style="display:flex;gap:4px">
+      <button onclick="toggleHistorialFiados()" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);border:none;padding:6px 10px;border-radius:6px;font-weight:700;font-size:11px;cursor:pointer" id="btn-hist-fiados">📜 Historial</button>
+      <button onclick="abrirModalNuevoFiado()" style="background:#FFD93D;color:#000;border:none;padding:6px 12px;border-radius:8px;font-weight:800;font-size:12px;cursor:pointer">+ Nuevo</button>
+    </div>
   </div>
   <div class="card res">
     <div class="col"><div class="lbl">Pendiente</div><div class="val" id="f-pendiente" style="color:#FFD93D">$0</div></div>
@@ -132,43 +135,18 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
 
 <div class="toast" id="toast"></div>
 
-<!-- Modal Fiado -->
+<!-- Modal Fiado (simplificado) -->
 <div class="modal" id="modal-fiado">
   <div class="minner">
-    <h3 id="modal-titulo">📒 Nuevo Fiado</h3>
-    <input id="fiado-id" type="hidden">
-    <label>Cliente</label>
-    <input id="fiado-cliente" placeholder="Nombre del cliente">
-    <label>Telefono (opcional)</label>
-    <input id="fiado-telefono" placeholder="300 123 4567">
-    <label>Notas (opcional)</label>
-    <input id="fiado-notas" placeholder="Descripcion">
-    <label>Fecha</label>
-    <input id="fiado-fecha" type="date">
-    <div style="margin-top:10px"><b style="font-size:12px">Productos:</b></div>
-    <div id="fiado-items"></div>
-    <button onclick="agregarItemFiado()" style="margin-top:4px;width:100%;padding:6px;border-radius:6px;border:1px solid rgba(77,150,255,.4);background:rgba(77,150,255,.1);color:#4D96FF;font-weight:700;font-size:11px;cursor:pointer">+ Agregar</button>
+    <h3>📒 Nuevo Fiado</h3>
+    <label>Nombre del cliente</label>
+    <input id="fiado-cliente" placeholder="Ej: Maria">
+    <label>Cantidad de bolis</label>
+    <input id="fiado-bolis" type="number" value="1" min="1" oninput="actualizarTotalFiado()">
     <div style="display:flex;justify-content:space-between;margin-top:10px;font-weight:900;font-size:17px;color:#FFD93D"><span>Total:</span><span id="fiado-total">$0</span></div>
     <div class="mbtn">
       <button onclick="cerrarModal()" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.5)">Cancelar</button>
       <button onclick="guardarFiado()" style="background:#FFD93D;color:#000">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Abono -->
-<div class="modal" id="modal-abono">
-  <div class="minner">
-    <h3>💰 Abono</h3>
-    <input id="abono-fiado-id" type="hidden">
-    <div style="margin-bottom:6px;font-size:13px">Cliente: <b id="abono-cliente"></b></div>
-    <label>Monto</label>
-    <input id="abono-monto" type="number" placeholder="5000">
-    <label>Fecha</label>
-    <input id="abono-fecha" type="date">
-    <div class="mbtn">
-      <button onclick="cerrarModalAbono()" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.5)">Cancelar</button>
-      <button onclick="guardarAbono()" style="background:#4D96FF;color:#fff">Registrar</button>
     </div>
   </div>
 </div>
@@ -207,7 +185,7 @@ var syncing = false;
 function initSupabase() {
   var lib = window.supabase || window.supabaseJs;
   if (lib && lib.createClient) {
-    try { supabase = lib.createClient(SUPABASE_URL, SUPABASE_KEY); console.log("Supabase OK"); actualizarEstadoSupabase(true); } catch(e) { console.warn("Supabase error:", e); }
+    try { supabase = lib.createClient(SUPABASE_URL, SUPABASE_KEY); console.log("Supabase OK"); actualizarEstadoSupabase(true); sincronizar(); } catch(e) { console.warn("Supabase error:", e); }
   } else {
     setTimeout(initSupabase, 500);
   }
@@ -249,7 +227,7 @@ async function sincronizar() {
     try {
       var fr = await supabase.from("fiados").select("*").order("id", {ascending:false});
       if (!fr.error && fr.data) {
-        fiados = fr.data.map(function(f) { return {id:f.id,cliente:f.cliente,telefono:f.telefono||"",fecha:f.fecha,items:f.items||[],total:f.total,abonado:f.abonado||0,notas:f.notas||"",estado:f.estado}; });
+        fiados = fr.data.map(function(f) { return {id:f.id,cliente:f.cliente,bolis:f.bolis||0,fecha:f.fecha,estado:f.estado}; });
         guardarFiadosLocal();
         if (vista === "fiados") pintarFiados();
       }
@@ -286,6 +264,7 @@ var vista = "ventas";
 var fiados = [];
 var toastT;
 var editandoFiadoId = null;
+var mostrarHistorialFiados = false;
 
 function cargar() {
   try { var r = localStorage.getItem(SK); if (r) DB = JSON.parse(r); } catch(e) {}
@@ -388,89 +367,65 @@ function pintarStats() {
 }
 
 // ============================
-// FIADOS
+// FIADOS (simplificado)
 // ============================
 function pintarFiados() {
   var tp = 0, act = 0;
+  var pendientes = [], pagados = [];
   for (var i = 0; i < fiados.length; i++) {
-    if (fiados[i].estado === "pendiente") { tp += fiados[i].total - (fiados[i].abonado||0); act++; }
+    var f = fiados[i];
+    if (f.estado === "pendiente") { tp += f.bolis * 1000; act++; pendientes.push(f); }
+    else { pagados.push(f); }
   }
   var e = document.getElementById("f-pendiente"); if (e) e.textContent = cop(tp);
   e = document.getElementById("f-activos"); if (e) e.textContent = act;
   var lista = document.getElementById("lista-fiados");
   if (!lista) return;
   lista.innerHTML = "";
-  if (fiados.length === 0) { lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2);padding:30px'>Sin fiados registrados</div>"; return; }
-  for (var i = 0; i < fiados.length; i++) {
-    var f = fiados[i], saldo = f.total - (f.abonado||0), fechaF = fechaLinda(f.fecha);
-    var itemsStr = (f.items||[]).map(function(it) { return it.cantidad+" "+it.nombre; }).join(", ");
+
+  var mostrar = mostrarHistorialFiados ? pagados : pendientes;
+
+  if (mostrar.length === 0) {
+    lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2);padding:30px'>" + (mostrarHistorialFiados ? "No hay historial" : "Sin fiados pendientes") + "</div>";
+    return;
+  }
+
+  for (var i = 0; i < mostrar.length; i++) {
+    var f = mostrar[i];
+    var debe = f.bolis * 1000;
     var div = document.createElement("div");
-    div.className = "frow" + (f.estado==="pagado"?" pagado":"");
-    div.innerHTML = '<div class="fhead"><div class="fnombre">'+f.cliente+(f.telefono?" 📞":"")+'</div><div class="festado '+f.estado+'">'+(f.estado==="pendiente"?"Pendiente":"Pagado")+'</div></div><div class="fdet">'+fechaF+(itemsStr?" · "+itemsStr:"")+(f.notas?" · "+f.notas:"")+'</div><div class="fmon"><div class="ftot">'+cop(saldo)+(f.estado==="pendiente"?' <span class="fabono">(abonado: '+cop(f.abonado||0)+')</span>':"")+'</div></div>'+(f.estado==="pendiente"?'<div class="fbtn"><button class="btn-abonar" onclick="abrirModalAbono('+f.id+')">💰 Abonar</button><button class="btn-pagar" onclick="pagarFiado('+f.id+')">✅ Pagar</button><button class="btn-cancel" onclick="cancelarFiado('+f.id+')">✕</button></div>':"");
+    div.className = "frow";
+    div.innerHTML = '<div class="fhead"><div class="fnombre">'+f.cliente+'</div><div class="festado '+(f.estado==="pendiente"?"pendiente":"pagado")+'">'+(f.estado==="pendiente"?"Pendiente":"Pagado")+'</div></div><div class="fdet">'+fechaLinda(f.fecha)+" · "+f.bolis+" bolis</div><div class="fmon"><div class="ftot">'+(f.estado==="pendiente"?cop(debe):cop(0))+'</div></div>'+(f.estado==="pendiente"?'<div class="fbtn"><button class="btn-pagar" onclick="pagarFiado('+f.id+')">✅ Pagar</button></div>':"");
     lista.appendChild(div);
   }
 }
 
+function toggleHistorialFiados() {
+  mostrarHistorialFiados = !mostrarHistorialFiados;
+  var btn = document.getElementById("btn-hist-fiados");
+  if (btn) btn.textContent = mostrarHistorialFiados ? "🔙 Actuales" : "📜 Historial";
+  pintarFiados();
+}
+
 function abrirModalNuevoFiado() {
-  editandoFiadoId = null;
-  document.getElementById("modal-titulo").textContent = "📒 Nuevo Fiado";
-  document.getElementById("fiado-id").value = "";
   document.getElementById("fiado-cliente").value = "";
-  document.getElementById("fiado-telefono").value = "";
-  document.getElementById("fiado-notas").value = "";
-  document.getElementById("fiado-fecha").value = hoy();
-  document.getElementById("fiado-items").innerHTML = "";
-  agregarItemFiado();
-  actualizarTotalFiado();
+  document.getElementById("fiado-bolis").value = "1";
+  document.getElementById("fiado-total").textContent = cop(1000);
   document.getElementById("modal-fiado").classList.add("open");
 }
-function cerrarModal() { document.getElementById("modal-fiado").classList.remove("open"); }
-function cerrarModalAbono() { document.getElementById("modal-abono").classList.remove("open"); }
 
-function agregarItemFiado() {
-  var container = document.getElementById("fiado-items");
-  var div = document.createElement("div");
-  div.style.cssText = "display:flex;gap:4px;align-items:center;margin-top:4px";
-  var opts = "";
-  for (var i = 0; i < SABORES.length; i++) opts += '<option value="'+SABORES[i].id+'">'+SABORES[i].emoji+" "+SABORES[i].nombre+'</option>';
-  div.innerHTML = '<select style="flex:2;padding:6px;border-radius:6px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:12px">'+opts+'</select><input type="number" value="1" min="1" style="width:55px;padding:6px;border-radius:6px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:12px"><button onclick="this.parentElement.remove();actualizarTotalFiado()" style="background:rgba(255,100,100,.15);border:1px solid rgba(255,100,100,.3);color:#FF8787;border-radius:6px;padding:6px 8px;font-weight:700;font-size:12px;cursor:pointer">✕</button>';
-  container.appendChild(div);
-}
+function cerrarModal() { document.getElementById("modal-fiado").classList.remove("open"); }
 
 function actualizarTotalFiado() {
-  var filas = document.querySelectorAll("#fiado-items > div");
-  var total = 0;
-  for (var i = 0; i < filas.length; i++) {
-    var sel = filas[i].querySelector("select");
-    var cant = parseInt(filas[i].querySelector("input").value) || 0;
-    for (var j = 0; j < SABORES.length; j++) {
-      if (SABORES[j].id === sel.value) { total += cant * SABORES[j].precio; break; }
-    }
-  }
-  document.getElementById("fiado-total").textContent = cop(total);
+  var cant = parseInt(document.getElementById("fiado-bolis").value) || 0;
+  document.getElementById("fiado-total").textContent = cop(cant * 1000);
 }
 
 async function guardarFiado() {
   var cliente = document.getElementById("fiado-cliente").value.trim();
   if (!cliente) { toast("Ingresa el nombre"); return; }
-  var telefono = document.getElementById("fiado-telefono").value.trim();
-  var notas = document.getElementById("fiado-notas").value.trim();
-  var fecha = document.getElementById("fiado-fecha").value;
-  var filas = document.querySelectorAll("#fiado-items > div");
-  var items = [];
-  for (var i = 0; i < filas.length; i++) {
-    var sel = filas[i].querySelector("select");
-    var cant = parseInt(filas[i].querySelector("input").value) || 0;
-    if (cant > 0) {
-      for (var j = 0; j < SABORES.length; j++) {
-        if (SABORES[j].id === sel.value) { items.push({sabor:sel.value,nombre:SABORES[j].nombre,cantidad:cant,precio:SABORES[j].precio}); break; }
-      }
-    }
-  }
-  if (items.length === 0) { toast("Agrega al menos un producto"); return; }
-  var total = 0;
-  for (var i = 0; i < items.length; i++) total += items[i].cantidad * items[i].precio;
-  var fiado = {cliente:cliente,telefono:telefono,fecha:fecha,items:items,total:total,abonado:0,notas:notas,estado:"pendiente"};
+  var bolis = parseInt(document.getElementById("fiado-bolis").value) || 1;
+  var fiado = {cliente:cliente,bolis:bolis,fecha:hoy(),estado:"pendiente"};
   if (supabase) {
     var r = await supabase.from("fiados").insert(fiado).select();
     if (r.error) { toast("Error: "+r.error.message); return; }
@@ -479,66 +434,23 @@ async function guardarFiado() {
   fiados.unshift(fiado);
   guardarFiadosLocal();
   cerrarModal();
-  toast("Fiado registrado");
+  toast("Fiado de "+bolis+" bolis con "+cliente);
   pintarFiados();
 }
 
 async function pagarFiado(id) {
-  if (!confirm("Marcar como pagado?")) return;
+  if (!confirm("Pagar este fiado?")) return;
   var fiado = null;
   for (var i = 0; i < fiados.length; i++) { if (fiados[i].id === id) { fiado = fiados[i]; break; } }
   if (!fiado) return;
   if (supabase) {
-    var r = await supabase.from("fiados").update({estado:"pagado",abonado:fiado.total}).eq("id",id);
+    var r = await supabase.from("fiados").update({estado:"pagado"}).eq("id",id);
     if (r.error) { toast("Error: "+r.error.message); return; }
   }
-  fiado.estado = "pagado"; fiado.abonado = fiado.total;
+  fiado.estado = "pagado";
   guardarFiadosLocal();
-  toast("Pagado"); pintarFiados();
-}
-
-function abrirModalAbono(id) {
-  var fiado = null;
-  for (var i = 0; i < fiados.length; i++) { if (fiados[i].id === id) { fiado = fiados[i]; break; } }
-  if (!fiado) return;
-  document.getElementById("abono-fiado-id").value = id;
-  document.getElementById("abono-cliente").textContent = fiado.cliente;
-  document.getElementById("abono-monto").value = "";
-  document.getElementById("abono-fecha").value = hoy();
-  document.getElementById("modal-abono").classList.add("open");
-}
-
-async function guardarAbono() {
-  var id = parseInt(document.getElementById("abono-fiado-id").value);
-  var monto = parseInt(document.getElementById("abono-monto").value);
-  var fecha = document.getElementById("abono-fecha").value;
-  if (!monto || monto <= 0) { toast("Monto invalido"); return; }
-  var fiado = null;
-  for (var i = 0; i < fiados.length; i++) { if (fiados[i].id === id) { fiado = fiados[i]; break; } }
-  if (!fiado) return;
-  var nuevoAbonado = (fiado.abonado||0) + monto;
-  var nuevoEstado = nuevoAbonado >= fiado.total ? "pagado" : "pendiente";
-  if (supabase) {
-    var r1 = await supabase.from("abonos").insert({fiado_id:id,monto:monto,fecha:fecha});
-    if (r1.error) { toast("Error: "+r1.error.message); return; }
-    var r2 = await supabase.from("fiados").update({abonado:nuevoAbonado,estado:nuevoEstado}).eq("id",id);
-    if (r2.error) { toast("Error: "+r2.error.message); return; }
-  }
-  fiado.abonado = nuevoAbonado; fiado.estado = nuevoEstado;
-  guardarFiadosLocal();
-  cerrarModalAbono();
-  toast("Abono registrado"); pintarFiados();
-}
-
-async function cancelarFiado(id) {
-  if (!confirm("Cancelar este fiado?")) return;
-  if (supabase) {
-    var r = await supabase.from("fiados").update({estado:"cancelado"}).eq("id",id);
-    if (r.error) { toast("Error: "+r.error.message); return; }
-  }
-  for (var i = 0; i < fiados.length; i++) { if (fiados[i].id === id) { fiados[i].estado = "cancelado"; break; } }
-  guardarFiadosLocal();
-  toast("Cancelado"); pintarFiados();
+  toast(fiado.cliente+" pagado");
+  pintarFiados();
 }
 
 // ============================
