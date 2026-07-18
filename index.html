@@ -1,219 +1,132 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
-<meta name="theme-color" content="#0a1f35"/>
-<meta name="mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-title" content="Bolis de Mari"/>
-<link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/svg+xml" href="icon.svg">
-<link rel="apple-touch-icon" href="icon.svg">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bolis de Mari 🧊</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Pacifico&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<style>
+body{background:#0d1b2a;color:#fff;font-family:Nunito,sans-serif;margin:0;padding:10px}
+.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.logo{font-family:Pacifico,cursive;color:#FFD93D;font-size:22px}
+.gan{font-weight:900;color:#FFD93D}
+.nav{display:flex;gap:3px;margin-bottom:8px}
+.nb{flex:1;padding:8px 2px;border-radius:8px;border:none;font-weight:700;font-size:11px;background:rgba(255,255,255,.1);color:#aaa;cursor:pointer}
+.nb.on{background:#FFD93D;color:#000}
+.card{border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px;margin-bottom:8px;background:rgba(255,255,255,.05)}
+.fila{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.emoji{font-size:24px;width:30px}
+.nombre{flex:1;font-weight:700;font-size:13px}
+.precio{font-size:11px;color:rgba(255,255,255,.3)}
+.ctrl{display:flex;align-items:center;gap:4px}
+.ctrl button{width:36px;height:36px;border-radius:8px;border:none;font-weight:900;font-size:18px;cursor:pointer}
+.menos{background:rgba(255,100,100,.2);color:#FF8787}
+.mas{background:rgba(107,203,119,.2);color:#6BCB77}
+.cant{width:30px;text-align:center;font-weight:900;font-size:20px;color:#6BCB77}
+.ganancia{font-weight:800;font-size:13px;min-width:55px;text-align:right;color:#FFD93D}
+.col{text-align:center;min-width:75px}
+.col .lbl{font-size:10px;color:rgba(255,255,255,.3)}
+.col .val{font-size:20px;font-weight:900}
+.res{display:flex;justify-content:space-around;flex-wrap:wrap;gap:4px}
+#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#6BCB77;color:#fff;padding:8px 20px;border-radius:20px;font-weight:700;font-size:13px;opacity:0;transition:.3s;pointer-events:none}
+#toast.on{opacity:1}
+#dbg{background:rgba(0,0,0,.9);color:#0f0;font:12px monospace;padding:4px 8px;margin-bottom:8px;border-left:3px solid #f00;max-height:80px;overflow:auto}
+#print{font-size:11px;color:rgba(255,255,255,.3);margin-bottom:8px;padding:4px 8px;background:rgba(0,0,0,.3);border-radius:4px;font-family:monospace;white-space:pre-wrap}
+</style>
 </head>
 <body>
 
-<div id="hdr">
-  <div class="hdr-row">
-    <div class="logo">
-      <img src="icon.svg" width="40" height="40" style="border-radius:10px;flex-shrink:0" alt="Logo">
-      <div>
-        <div class="logo-txt">Bolis de Mari</div>
-        <div id="badge">💾 Sincronizado</div>
-      </div>
-    </div>
-    <div class="hdr-gain">
-      <div class="hdr-gain-lbl">Ganancia hoy</div>
-      <div class="hdr-gain-val" id="ganHoy">$0</div>
-    </div>
-  </div>
-  <div class="nav">
-    <button class="nb on" id="nb-ventas"    onclick="ir('ventas')">🧊 Ventas</button>
-    <button class="nb"    id="nb-historial" onclick="ir('historial')">📅 Historial</button>
-    <button class="nb"    id="nb-stats"     onclick="ir('stats')">📊 Stats</button>
-    <button class="nb"    id="nb-fiados"    onclick="ir('fiados')">📒 Fiados</button>
-    <button class="nb"    id="nb-config"    onclick="ir('config')">⚙️ Config</button>
-  </div>
+<div id="dbg">⏳ Cargando...</div>
+<div id="print"></div>
+
+<div class="hdr">
+  <div class="logo">🧊 Bolis de Mari</div>
+  <div><div style="font-size:10px;color:rgba(255,255,255,.3)">Ganancia hoy</div><div class="gan" id="ganHoy">$0</div></div>
 </div>
 
-<div id="frase" onclick="rotateFrase()">Cargando bendición... 🙏</div>
-<div id="toast"></div>
-
-<div class="wrap">
+<div class="nav">
+  <button class="nb on" id="nb-ventas" onclick="ir('ventas')">🧊 Ventas</button>
+  <button class="nb" id="nb-historial" onclick="ir('historial')">📅 Historial</button>
+  <button class="nb" id="nb-stats" onclick="ir('stats')">📊 Stats</button>
+  <button class="nb" id="nb-fiados" onclick="ir('fiados')">📒 Fiados</button>
+  <button class="nb" id="nb-config" onclick="ir('config')">⚙️ Config</button>
+</div>
 
 <div id="v-ventas">
-  <div class="card res" id="resHoy">
-    <div class="sb"><div class="sl">Vendidos hoy</div><div class="sv big" id="r-total" style="color:#6BCB77">0</div></div>
-    <div class="sb"><div class="sl">Ganancia hoy</div><div class="sv big" id="r-gan" style="color:#FFD93D">$0</div></div>
-    <div class="sb"><div class="sl">Prom. bolis/día</div><div class="sv" id="r-prom" style="color:#4D96FF">0</div></div>
-    <div class="sb"><div class="sl">Prom. ganancia</div><div class="sv" id="r-promgan" style="color:#C77DFF">$0</div></div>
+  <div class="card res">
+    <div class="col"><div class="lbl">Vendidos hoy</div><div class="val" style="color:#6BCB77" id="r-total">0</div></div>
+    <div class="col"><div class="lbl">Ganancia</div><div class="val" style="color:#FFD93D" id="r-gan">$0</div></div>
+    <div class="col"><div class="lbl">Prom/dia</div><div class="val" style="color:#4D96FF" id="r-prom">0</div></div>
+    <div class="col"><div class="lbl">Prom $</div><div class="val" style="color:#C77DFF" id="r-promgan">$0</div></div>
   </div>
   <div id="lista-sabores"></div>
 </div>
 
 <div id="v-historial" style="display:none">
-  <div style="font-weight:900;font-size:17px;margin-bottom:12px">📅 Historial <span id="ndias" style="font-size:11px;font-weight:600;color:rgba(255,255,255,.4)"></span></div>
+  <div style="font-weight:900;margin-bottom:8px">📅 Historial (<span id="ndias">0</span> dias)</div>
   <div id="lista-hist"></div>
 </div>
 
 <div id="v-stats" style="display:none">
-  <div class="kgrid" id="kpis"></div>
+  <div class="card"><div id="kpis" class="res"></div></div>
   <div class="card" id="ranking"></div>
-  <div class="card"><div class="ctit">🍧 Distribución por sabor</div><div class="chwrap"><canvas id="cPie"></canvas></div></div>
-  <div style="margin-bottom:12px"></div>
-  <div class="card"><div class="ctit">📈 Ganancias últimos 14 días</div><div class="chwrap"><canvas id="cBar"></canvas></div></div>
-  <div style="margin-bottom:12px"></div>
-  <div class="card"><div class="ctit">🧊 Bolis vendidos por día</div><div class="chwrap"><canvas id="cLine"></canvas></div></div>
-  <div style="margin-bottom:12px"></div>
-  <div class="card"><div class="ctit">📅 Ganancias por mes</div><div class="chwrap"><canvas id="cMes"></canvas></div></div>
 </div>
 
 <div id="v-fiados" style="display:none">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-    <div style="font-weight:900;font-size:17px">📒 Fiados</div>
-    <button onclick="abrirModalNuevoFiado()" style="background:#FFD93D;color:#0a0f1e;border:none;padding:8px 14px;border-radius:10px;font-weight:800;font-size:12px">+ Nuevo</button>
+  <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+    <b>📒 Fiados</b>
+    <button onclick="abrirModalNuevoFiado()" style="background:#FFD93D;color:#000;border:none;padding:6px 12px;border-radius:8px;font-weight:800;font-size:12px;cursor:pointer">+ Nuevo</button>
   </div>
-  <div class="card res" style="margin-bottom:12px">
-    <div class="sb"><div class="sl">Pendiente total</div><div class="sv big" id="f-pendiente" style="color:#FFD93D">$0</div></div>
-    <div class="sb"><div class="sl">Fiados activos</div><div class="sv" id="f-activos" style="color:#FF9F1C">0</div></div>
-    <div class="sb"><div class="sl">Cobrado hoy</div><div class="sv" id="f-cobrado" style="color:#6BCB77">$0</div></div>
+  <div class="card res">
+    <div class="col"><div class="lbl">Pendiente</div><div class="val" id="f-pendiente" style="color:#FFD93D">$0</div></div>
+    <div class="col"><div class="lbl">Activos</div><div class="val" id="f-activos" style="color:#FF9F1C">0</div></div>
   </div>
   <div id="lista-fiados"></div>
 </div>
 
 <div id="v-config" style="display:none">
-  <div style="font-weight:900;font-size:17px;margin-bottom:12px">⚙️ Configuración</div>
-  <div class="csec">
-    <div class="ctitc">🙏 Frase del momento</div>
-    <div id="frase-cfg" style="font-size:12px;color:rgba(255,255,255,.6);font-style:italic;margin-bottom:10px;line-height:1.5"></div>
-    <button class="cbtn cbtn-save" style="flex:none" onclick="rotateFrase()">🔄 Nueva frase</button>
-  </div>
-  <div class="csec">
-    <div class="ctitc" style="color:#6BCB77">☁️ Supabase</div>
-    <div style="font-size:11.5px;color:rgba(255,255,255,.6);line-height:1.6">
-      ✅ Base de datos configurada automáticamente<br>
-      📡 Los datos se sincronizan en la nube cada 30 segundos
-    </div>
-    <div style="margin-top:10px">
-      <button class="cbtn cbtn-test" onclick="probarConexion()" style="margin-bottom:6px">🔌 Probar conexión</button>
-    </div>
-    <div class="cstatus" id="cst"></div>
-  </div>
-  <div class="csec" style="text-align:center">
-    <div style="font-size:11px;color:rgba(255,255,255,.3);line-height:1.9">
-      💾 Datos sincronizados con Supabase<br>
-      🔄 Sync automático cada 30 seg<br>
-      🙏 70+ frases cristianas motivacionales<br>
-      📒 Nueva sección de Fiados<br>
-      📱 Funciona en celular y computador
-    </div>
+  <b>⚙️ Config</b>
+  <div class="card" style="margin-top:8px;font-size:12px;color:rgba(255,255,255,.5)">
+    App local - tus datos se guardan en este dispositivo
   </div>
 </div>
 
-</div>
-
-<div class="modal" id="modal-fiado">
-  <div class="modal-inner">
-    <h3 id="modal-titulo">📒 Nuevo Fiado</h3>
-    <input id="fiado-id" type="hidden">
-    <label>Nombre del cliente</label>
-    <input id="fiado-cliente" placeholder="Ej: Doña María">
-    <label>Teléfono (opcional)</label>
-    <input id="fiado-telefono" placeholder="300 123 4567">
-    <label>Notas (opcional)</label>
-    <textarea id="fiado-notas" placeholder="Descripción..."></textarea>
-    <label>Fecha</label>
-    <input id="fiado-fecha" type="date">
-    <div class="mitems" id="fiado-items">
-      <div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px">Productos:</div>
-    </div>
-    <div style="margin-top:6px">
-      <button onclick="agregarItemFiado()" style="background:rgba(77,150,255,.15);color:#4D96FF;border:1px solid rgba(77,150,255,.4);border-radius:8px;padding:6px 12px;font-weight:700;font-size:11px;width:100%">+ Agregar producto</button>
-    </div>
-    <div style="display:flex;justify-content:space-between;margin-top:10px;font-weight:900;font-size:18px;color:#FFD93D">
-      <span>Total:</span>
-      <span id="fiado-total">$0</span>
-    </div>
-    <div class="mbtnrow">
-      <button onclick="cerrarModal()" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.6)">Cancelar</button>
-      <button id="modal-guardar" onclick="guardarFiado()" style="background:#FFD93D;color:#0a0f1e">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="modal-abono">
-  <div class="modal-inner">
-    <h3>💰 Registrar Abono</h3>
-    <input id="abono-fiado-id" type="hidden">
-    <div style="margin-bottom:10px;font-size:13px;color:rgba(255,255,255,.6)">
-      Cliente: <strong id="abono-cliente" style="color:#fff"></strong>
-    </div>
-    <label>Monto del abono</label>
-    <input id="abono-monto" type="number" placeholder="5000">
-    <label>Fecha</label>
-    <input id="abono-fecha" type="date">
-    <div class="mbtnrow">
-      <button onclick="cerrarModalAbono()" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.6)">Cancelar</button>
-      <button onclick="guardarAbono()" style="background:#4D96FF;color:#fff">Registrar Abono</button>
-    </div>
-  </div>
-</div>
+<div id="toast"></div>
 
 <script>
-var d=document.createElement('div');d.id='dbg';d.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;background:rgba(0,0,0,0.9);color:#0f0;font:bold 13px monospace;padding:8px 12px;max-height:150px;overflow-y:auto;border-bottom:3px solid #f00;white-space:pre-wrap';document.body.prepend(d);d.innerHTML='⏳ Cargando JS...\n';var _log=console.log,_err=console.error,_warn=console.warn;console.log=function(){_log.apply(console,arguments);d.innerHTML+='📌 '+Array.prototype.join.call(arguments,' ')+'\n';d.scrollTop=d.scrollHeight};console.error=function(){_err.apply(console,arguments);d.innerHTML+='❌ '+Array.prototype.join.call(arguments,' ')+'\n';d.scrollTop=d.scrollHeight};console.warn=function(){_warn.apply(console,arguments);d.innerHTML+='⚠️ '+Array.prototype.join.call(arguments,' ')+'\n';d.scrollTop=d.scrollHeight};
-console.log("DEBUG: JS inline iniciado");
-</script>
+// === DEBUG ===
+var DBG = document.getElementById("dbg");
+var P = document.getElementById("print");
+function L(msg) { DBG.innerHTML = "⏳ " + msg; P.textContent += msg + "\n"; }
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+L("Iniciando...");
 
-<script defer>
-console.log("DEBUG: app.js iniciando...");
-
+// === SABORES ===
 var SABORES = [
-  {id:"coco",       nombre:"Coco",       emoji:"🥥", precio:1000},
-  {id:"pina",       nombre:"Pina",       emoji:"🍍", precio:1000},
-  {id:"tamarindo",  nombre:"Tamarindo",  emoji:"🟤", precio:1000},
-  {id:"limon",      nombre:"Limon",      emoji:"🍋", precio:1000},
-  {id:"corozo",     nombre:"Corozo",     emoji:"🫐", precio:1000},
-  {id:"galleta",    nombre:"Galleta",    emoji:"🍪", precio:1000},
-  {id:"bocadillo",  nombre:"Bocadillo",  emoji:"🟥", precio:1000},
-  {id:"cola",       nombre:"Cola",       emoji:"🥤", precio:1000},
-  {id:"mango",      nombre:"Mango",      emoji:"🥭", precio:1000},
-  {id:"guanabana",  nombre:"Guanabana",  emoji:"💚", precio:1000},
-  {id:"maracuya",   nombre:"Maracuya",   emoji:"🟡", precio:1000},
-  {id:"hielo",      nombre:"Hielo",      emoji:"🧊", precio:500},
-  {id:"chocolate",  nombre:"Chocolate",  emoji:"🍫", precio:1000}
+  {id:"coco", nombre:"Coco", emoji:"🥥", precio:1000},
+  {id:"pina", nombre:"Pina", emoji:"🍍", precio:1000},
+  {id:"tamarindo", nombre:"Tamarindo", emoji:"🟤", precio:1000},
+  {id:"limon", nombre:"Limon", emoji:"🍋", precio:1000},
+  {id:"corozo", nombre:"Corozo", emoji:"🫐", precio:1000},
+  {id:"galleta", nombre:"Galleta", emoji:"🍪", precio:1000},
+  {id:"bocadillo", nombre:"Bocadillo", emoji:"🟥", precio:1000},
+  {id:"cola", nombre:"Cola", emoji:"🥤", precio:1000},
+  {id:"mango", nombre:"Mango", emoji:"🥭", precio:1000},
+  {id:"guanabana", nombre:"Guanabana", emoji:"💚", precio:1000},
+  {id:"maracuya", nombre:"Maracuya", emoji:"🟡", precio:1000},
+  {id:"hielo", nombre:"Hielo", emoji:"🧊", precio:500},
+  {id:"chocolate", nombre:"Chocolate", emoji:"🍫", precio:1000}
 ];
-console.log("SABORES cargados:", SABORES.length);
+L("SABORES: " + SABORES.length);
 
-var SUPABASE_URL = "https://dysbrehrmumijbkkhbzs.supabase.co";
-var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5c2JyZWhybXVtaWpia2toYnpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzODg0NjQsImV4cCI6MjA5OTk2NDQ2NH0.C-0502AFKhXqak9JTVR2Ypz-aEJfQUWir3o0gL_egHk";
-var supabase = null;
-
-function initSupabase() {
-  var lib = window.supabase || window.supabaseJs;
-  if (lib && lib.createClient) {
-    try { supabase = lib.createClient(SUPABASE_URL, SUPABASE_KEY); console.log("Supabase: OK"); } catch(e) { console.warn("Supabase error:", e); }
-  } else {
-    console.log("Supabase lib no disponible, reintentando en 500ms...");
-    setTimeout(initSupabase, 500);
-  }
-}
-
-var SK = "bolismari_v5";
+// === STATE ===
 var DB = {};
 var vista = "ventas";
-var diaOpen = null;
-var fraseI = -1;
-var syncing = false;
-var syncTimer = null;
-var charts = {};
 var fiados = [];
-var editandoFiado = null;
+var fraseI = 0;
+var syncTimer = null;
+var SK = "bolismari_v5";
+
 var FRASES = [
   "Todo lo puedo en Cristo que me fortalece. — Fil. 4:13",
   "Dios bendice el trabajo de tus manos hoy.",
@@ -221,166 +134,119 @@ var FRASES = [
   "Cada boli vendido es una bendicion de Dios.",
   "Confia en el Senor con todo tu corazon. — Prov. 3:5",
   "Dios ve tu esfuerzo y te recompensara!",
-  "Pon tus obras en manos del Senor. — Prov. 16:3",
-  "El que busca, encuentra. — Mat. 7:8",
-  "Con fe y trabajo, Dios multiplica tus ganancias.",
   "Eres mas que vencedora en Cristo Jesus!",
-  "Dios proveera. — Gen. 22:14",
-  "El da esfuerzo al cansado. — Isa. 40:29",
-  "Hoy sera un gran dia de ventas, creelo!",
-  "No te rindas, lo mejor de Dios esta por venir.",
-  "Dios hace todas las cosas para bien. — Rom. 8:28",
-  "Alegrate en el Senor siempre. — Fil. 4:4",
-  "Nunca te dejare ni te abandonare. — Heb. 13:5",
-  "El trabajo de tus manos comeras; dichoso seras. — Sal. 128:2",
-  "El Senor te bendiga y te guarde. — Num. 6:24",
-  "Este es el dia que hizo el Senor, alegremonos en el!",
-  "Tu fe activa las promesas de Dios.",
-  "Mujer virtuosa, su valor supera al de las piedras preciosas. — Prov. 31:10",
-  "Ella extiende su mano al pobre. — Prov. 31:20",
-  "Sus hijos se levantaran y la llamaran bienaventurada. — Prov. 31:28",
-  "Dios honra a quienes le honran en su trabajo.",
-  "El cielo celebra cada uno de tus logros!",
-  "Yo he venido para que tengan vida abundante. — Juan 10:10",
-  "Bienaventurada tu entre las mujeres. — Luc. 1:42",
-  "Todo lo que hagan, hagalo de corazon. — Col. 3:23",
-  "El Senor cumplira en mi su proposito. — Sal. 138:8",
-  "El que comenzo tan buena obra la ira perfeccionando. — Fil. 1:6",
-  "Den y se les dara. — Luc. 6:38",
-  "El Senor te hara la cabeza y no la cola. — Deut. 28:13",
-  "Porque con Dios nada es imposible. — Luc. 1:37",
-  "Grande es el Senor y digno de alabanza. — Sal. 145:3",
-  "Ustedes son la luz del mundo. — Mat. 5:14",
-  "La paz de Dios guarde sus corazones. — Fil. 4:7",
-  "El Senor guia los pasos del hombre. — Sal. 37:23",
-  "Eres imparable y bendecida por Dios!",
-  "Tu negocio es un testimonio del Reino de Dios.",
-  "Por tanto, no desmayemos al hacer el bien. — Gal. 6:9",
-  "Jehova es bueno; su misericordia es para siempre. — Sal. 100:5",
-  "El Senor esta cerca. — Fil. 4:5",
-  "Bendito el Senor; cada dia nos colma de beneficios. — Sal. 68:19",
-  "La alegria del Senor es tu fortaleza. — Neh. 8:10",
-  "Con cada boli llevas alegria y Dios lo ve."
+  "La alegria del Senor es tu fortaleza. — Neh. 8:10"
 ];
 
-function hoy() { var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-function fechaLinda(k) { if(!k)return'';var p=k.split('-');var M=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return parseInt(p[2])+' '+M[parseInt(p[1])-1]+' '+p[0]; }
-function cop(n) { return '$'+Number(n).toLocaleString('es-CO'); }
+// === HELPERS ===
+function hoy() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
+function cop(n) { return "$" + Number(n).toLocaleString("es-CO"); }
+function fechaLinda(k) { if (!k) return ""; var p = k.split("-"); var M = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]; return parseInt(p[2]) + " " + M[parseInt(p[1])-1] + " " + p[0]; }
 
-function cargar() { try{var r=localStorage.getItem(SK);if(r)DB=JSON.parse(r)}catch(e){} try{var f=localStorage.getItem("bolismari_fiados");if(f)fiados=JSON.parse(f)}catch(e){} console.log("DB cargada, dias:", Object.keys(DB).length); }
-function guardarLocal() { try{localStorage.setItem(SK,JSON.stringify(DB))}catch(e){} }
-function guardarFiadosLocal() { try{localStorage.setItem("bolismari_fiados",JSON.stringify(fiados))}catch(e){} }
+function cargar() { try { var r = localStorage.getItem(SK); if (r) DB = JSON.parse(r); } catch(e) {} L("Cargados " + Object.keys(DB).length + " dias de datos"); }
+function guardar() { try { localStorage.setItem(SK, JSON.stringify(DB)); } catch(e) {} }
 
-function getDia(k) { var d=DB[k]||{},o={};for(var i=0;i<SABORES.length;i++)o[SABORES[i].id]=d[SABORES[i].id]||0;return o; }
-function totales(k) { var d=getDia(k),bolis=0,gan=0;for(var i=0;i<SABORES.length;i++){bolis+=d[SABORES[i].id];gan+=d[SABORES[i].id]*SABORES[i].precio}return{bolis:bolis,ganancia:gan}; }
+function getDia(k) { var d = DB[k] || {}; var o = {}; for (var i=0; i<SABORES.length; i++) o[SABORES[i].id] = d[SABORES[i].id] || 0; return o; }
+function totales(k) { var d = getDia(k); var b=0,g=0; for (var i=0; i<SABORES.length; i++) { b += d[SABORES[i].id]; g += d[SABORES[i].id] * SABORES[i].precio; } return {bolis:b, ganancia:g}; }
 
+// === VENDER ===
+function vender(id, delta) {
+  L("Vender " + id + " " + delta);
+  var k = hoy();
+  if (!DB[k]) DB[k] = {};
+  DB[k][id] = Math.max(0, (DB[k][id] || 0) + delta);
+  guardar();
+  pintarVentas();
+}
+
+// === PINTAR ===
 function pintarVentas() {
-  console.log("pintarVentas()");
-  var k=hoy(),dia=getDia(k),t=totales(k);
-  var el=document.getElementById("ganHoy");if(el)el.textContent=cop(t.ganancia);
-  el=document.getElementById("r-total");if(el)el.textContent=t.bolis;
-  el=document.getElementById("r-gan");if(el)el.textContent=cop(t.ganancia);
-  var dias=Object.keys(DB);
-  if(dias.length){var tb=0,tg=0;for(var i=0;i<dias.length;i++){var tt=totales(dias[i]);tb+=tt.bolis;tg+=tt.ganancia}el=document.getElementById("r-prom");if(el)el.textContent=Math.round(tb/dias.length);el=document.getElementById("r-promgan");if(el)el.textContent=cop(Math.round(tg/dias.length))}
-  var lista=document.getElementById("lista-sabores");
-  if(!lista){console.warn("lista-sabores NO encontrado");return}
-  lista.innerHTML="";
-  for(var i=0;i<SABORES.length;i++){
-    var s=SABORES[i],v=dia[s.id]||0,on=v>0,div=document.createElement("div");
-    div.className="srow"+(on?" on":"");
-    div.innerHTML='<div class="semoji">'+s.emoji+'</div><div class="sinfo"><div class="snombre">'+s.nombre+'</div><div class="sprecio">'+cop(s.precio)+' c/u</div></div><div class="sctrl"><button class="bmenos" onclick="vender(\''+s.id+'\',-1)">−</button><div class="scant'+(on?" on":"")+'">'+v+'</div><button class="bmas" onclick="vender(\''+s.id+'\',1)">+</button></div><div class="sgan'+(on?" on":"")+'">'+cop(v*s.precio)+'</div>';
-    lista.appendChild(div);
+  L("pintarVentas()");
+  var k = hoy();
+  var dia = getDia(k);
+  var t = totales(k);
+
+  var e = document.getElementById("ganHoy"); if (e) e.textContent = cop(t.ganancia);
+  e = document.getElementById("r-total"); if (e) e.textContent = t.bolis;
+  e = document.getElementById("r-gan"); if (e) e.textContent = cop(t.ganancia);
+
+  var dias = Object.keys(DB);
+  if (dias.length) {
+    var tb=0,tg=0;
+    for (var i=0;i<dias.length;i++) { var tt = totales(dias[i]); tb += tt.bolis; tg += tt.ganancia; }
+    e = document.getElementById("r-prom"); if (e) e.textContent = Math.round(tb/dias.length);
+    e = document.getElementById("r-promgan"); if (e) e.textContent = cop(Math.round(tg/dias.length));
   }
-  console.log("pintarVentas() fin,", SABORES.length, "sabores renderizados");
+
+  var lista = document.getElementById("lista-sabores");
+  if (!lista) { L("ERROR: no lista-sabores!"); return; }
+  lista.innerHTML = "";
+  for (var i=0; i<SABORES.length; i++) {
+    var s = SABORES[i];
+    var v = dia[s.id] || 0;
+    var d = document.createElement("div");
+    d.className = "fila";
+    d.innerHTML = '<div class="emoji">' + s.emoji + '</div><div class="nombre">' + s.nombre + '</div><div class="ctrl"><button class="menos" onclick="vender(\'' + s.id + '\',-1)">−</button><div class="cant' + '">' + v + '</div><button class="mas" onclick="vender(\'' + s.id + '\',1)">+</button></div><div class="ganancia">' + cop(v * s.precio) + '</div>';
+    lista.appendChild(d);
+  }
+  L("OK " + SABORES.length + " sabores pintados");
 }
 
 function pintarHistorial() {
-  var dias=Object.keys(DB).sort(function(a,b){return b.localeCompare(a)});
-  var el=document.getElementById("ndias");if(el)el.textContent=dias.length+" dia(s)";
-  var lista=document.getElementById("lista-hist");if(!lista)return;
-  lista.innerHTML="";
-  if(!dias.length){lista.innerHTML='<div class="card" style="text-align:center;color:rgba(255,255,255,.25);padding:36px 16px">Sin registros aun</div>';return}
-  for(var i=0;i<dias.length;i++){var k=dias[i],t=totales(k),open=diaOpen===k,btn=document.createElement("button");btn.className="dbtn"+(open?" open":"");btn.innerHTML='<div style="text-align:left"><div style="font-weight:800;font-size:15px">'+fechaLinda(k)+'</div><div style="font-size:12px;color:rgba(255,255,255,.35)">'+t.bolis+' bolis vendidos</div></div><div style="display:flex;align-items:center;gap:10px"><div style="font-weight:900;font-size:17px;color:#FFD93D">'+cop(t.ganancia)+'</div><div style="color:rgba(255,255,255,.3);font-size:13px">'+(open?"▲":"▼")+'</div></div>';
-    btn.onclick=function(fecha){return function(){diaOpen=diaOpen===fecha?null:fecha;pintarHistorial()}}(k);
-    lista.appendChild(btn);
-    if(open){var det=document.createElement("div");det.className="ddet open";var d=getDia(k),hay=false;for(var j=0;j<SABORES.length;j++){var s=SABORES[j],v=d[s.id]||0;if(!v)continue;hay=true;var f=document.createElement("div");f.className="dfila";f.innerHTML='<div style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700"><span>'+s.emoji+'</span>'+s.nombre+'</div><div style="display:flex;gap:14px;align-items:center"><span style="color:#6BCB77;font-weight:800;font-size:16px">'+v+'</span><span style="color:#FFD93D;font-weight:700;font-size:13px">'+cop(v*s.precio)+'</span></div>';det.appendChild(f)}if(!hay)det.innerHTML='<div style="color:rgba(255,255,255,.3);font-size:13px;text-align:center;padding:8px">Sin ventas registradas</div>';lista.appendChild(det)}
+  L("pintarHistorial()");
+  var dias = Object.keys(DB).sort(function(a,b) { return b.localeCompare(a); });
+  var e = document.getElementById("ndias"); if (e) e.textContent = dias.length;
+  var lista = document.getElementById("lista-hist"); if (!lista) return;
+  lista.innerHTML = "";
+  if (!dias.length) { lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2)'>Sin datos</div>"; return; }
+  for (var i=0;i<dias.length;i++) {
+    var k = dias[i], t = totales(k);
+    var d = document.createElement("div");
+    d.className = "card";
+    d.innerHTML = '<div style="display:flex;justify-content:space-between"><b>' + fechaLinda(k) + '</b> <span style="color:#FFD93D;font-weight:900">' + cop(t.ganancia) + '</span></div><div style="font-size:11px;color:rgba(255,255,255,.3)">' + t.bolis + " bolis</div>";
+    lista.appendChild(d);
   }
 }
 
 function pintarStats() {
-  var dias=Object.keys(DB).sort();var kpis=document.getElementById("kpis");if(!kpis)return;
-  if(!dias.length){kpis.innerHTML='<div style="grid-column:1/-1;color:rgba(255,255,255,.3);text-align:center;padding:30px">Registra ventas para ver estadisticas</div>';return}
-  var nd=dias.length,tg=0;for(var i=0;i<nd;i++)tg+=totales(dias[i]).ganancia;var promg=Math.round(tg/nd),mejork=dias[0];for(var i=1;i<nd;i++){if(totales(dias[i]).ganancia>totales(mejork).ganancia)mejork=dias[i]}
-  kpis.innerHTML='<div class="kcard"><div class="klbl">Total ganancias</div><div class="kval" style="color:#FFD93D">'+cop(tg)+'</div></div><div class="kcard"><div class="klbl">Dias registrados</div><div class="kval" style="color:#4D96FF">'+nd+'</div></div><div class="kcard"><div class="klbl">Promedio/dia</div><div class="kval" style="color:#6BCB77">'+cop(promg)+'</div></div><div class="kcard"><div class="klbl">Mejor dia</div><div class="kval" style="color:#FF9F1C;font-size:13px">'+fechaLinda(mejork)+'<br><span style="font-size:14px;color:#FFD93D">'+cop(totales(mejork).ganancia)+'</span></div></div>';
-  var porSabor=[];for(var i=0;i<SABORES.length;i++){var s=SABORES[i],total=0;for(var j=0;j<dias.length;j++)total+=getDia(dias[j])[s.id]||0;porSabor.push({id:s.id,nombre:s.nombre,emoji:s.emoji,precio:s.precio,total:total,ganancia:total*s.precio})}
-  porSabor.sort(function(a,b){return b.total-a.total});porSabor=porSabor.filter(function(s){return s.total>0});
-  var pos=["#FFD700","#C0C0C0","#CD7F32","#aaa","#aaa","#aaa"];var rk=document.getElementById("ranking");if(rk){rk.innerHTML='<div class="ctit">Ranking de sabores</div>';for(var i=0;i<Math.min(porSabor.length,6);i++){rk.innerHTML+='<div style="display:flex;align-items:center;gap:9px;margin-bottom:8px"><span style="font-size:13px;font-weight:900;color:'+pos[i]+';width:20px">#'+(i+1)+'</span><span style="font-size:17px">'+porSabor[i].emoji+'</span><span style="flex:1;font-size:13px;font-weight:700">'+porSabor[i].nombre+'</span><span style="color:#6BCB77;font-weight:800;font-size:13px">'+porSabor[i].total+'</span><span style="color:#FFD93D;font-weight:700;font-size:12px">'+cop(porSabor[i].ganancia)+'</span></div>'}}
-  if(charts.pie)charts.pie.destroy();if(charts.bar)charts.bar.destroy();if(charts.line)charts.line.destroy();if(charts.mes)charts.mes.destroy();
-  if(typeof Chart==="undefined")return;
-  var PIE_C=["#FFD93D","#6BCB77","#4D96FF","#FF6B6B","#C77DFF","#FF9F1C","#2EC4B6","#E71D36","#FF70A6","#70D6FF","#E9C46A","#06D6A0","#8B5E3C"];
-  var AXES={x:{ticks:{color:"rgba(255,255,255,.4)",font:{size:10}},grid:{display:false}},y:{ticks:{color:"rgba(255,255,255,.3)",font:{size:9}},grid:{color:"rgba(255,255,255,.05)"}}};
-  var BASE={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}};
-  var u14=dias.slice(-14);
-  try{charts.pie=new Chart(document.getElementById("cPie"),{type:"pie",data:{labels:porSabor.map(function(s){return s.emoji+" "+s.nombre}),datasets:[{data:porSabor.map(function(s){return s.total}),backgroundColor:PIE_C,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"right",labels:{color:"rgba(255,255,255,.6)",font:{size:10},boxWidth:12}}}}})}catch(e){console.warn("Chart pie:",e)}
-  try{charts.bar=new Chart(document.getElementById("cBar"),{type:"bar",data:{labels:u14.map(function(k){return fechaLinda(k).slice(0,6)}),datasets:[{data:u14.map(function(k){return totales(k).ganancia}),backgroundColor:"#FFD93D",borderRadius:5}]},options:Object.assign({},BASE,{scales:Object.assign({},AXES,{y:Object.assign({},AXES.y,{ticks:Object.assign({},AXES.y.ticks,{callback:function(v){return "$"+Math.round(v/1000)+"k"}})}})})})})}catch(e){console.warn("Chart bar:",e)}
-  try{charts.line=new Chart(document.getElementById("cLine"),{type:"line",data:{labels:u14.map(function(k){return fechaLinda(k).slice(0,6)}),datasets:[{data:u14.map(function(k){return totales(k).bolis}),borderColor:"#6BCB77",backgroundColor:"rgba(107,203,119,.1)",borderWidth:2.5,pointBackgroundColor:"#6BCB77",pointRadius:4,tension:.3,fill:true}]},options:Object.assign({},BASE,{scales:AXES})})}catch(e){console.warn("Chart line:",e)}
-  var meses={};for(var i=0;i<dias.length;i++){var m=dias[i].slice(0,7);if(!meses[m])meses[m]=0;meses[m]+=totales(dias[i]).ganancia}var mesK=Object.keys(meses).sort();var ML=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];var mesL=mesK.map(function(k){var p=k.split("-");return ML[parseInt(p[1])-1]+" "+p[0].slice(2)});
-  try{charts.mes=new Chart(document.getElementById("cMes"),{type:"bar",data:{labels:mesL,datasets:[{data:mesK.map(function(k){return meses[k]}),backgroundColor:"#C77DFF",borderRadius:5}]},options:Object.assign({},BASE,{scales:Object.assign({},AXES,{y:Object.assign({},AXES.y,{ticks:Object.assign({},AXES.y.ticks,{callback:function(v){return "$"+Math.round(v/1000)+"k"}})}})})})})}catch(e){console.warn("Chart mes:",e)}
+  L("pintarStats()");
+  var dias = Object.keys(DB).sort();
+  var kpis = document.getElementById("kpis"); if (!kpis) return;
+  if (!dias.length) { kpis.innerHTML = "<div style='color:rgba(255,255,255,.3);padding:20px'>Sin datos</div>"; return; }
+  var nd = dias.length, tg = 0;
+  for (var i=0;i<nd;i++) tg += totales(dias[i]).ganancia;
+  var prom = Math.round(tg/nd);
+  kpis.innerHTML = '<div class="col"><div class="lbl">Total</div><div class="val" style="color:#FFD93D">' + cop(tg) + '</div></div><div class="col"><div class="lbl">Dias</div><div class="val" style="color:#4D96FF">' + nd + '</div></div><div class="col"><div class="lbl">Prom/dia</div><div class="val" style="color:#6BCB77">' + cop(prom) + '</div></div>';
 }
 
-function vender(id,delta){var k=hoy();if(!DB[k])DB[k]={};DB[k][id]=Math.max(0,(DB[k][id]||0)+delta);guardarLocal();pintarVentas();programarSync()}
-function badge(txt,color){var el=document.getElementById("badge");if(el){el.textContent=txt;el.style.color=color||"rgba(255,255,255,.35)"}}
-var toastT;function toast(msg){var el=document.getElementById("toast");if(!el)return;el.textContent=msg;el.classList.add("on");clearTimeout(toastT);toastT=setTimeout(function(){el.classList.remove("on")},2200)}
-function rotateFrase(){var i;do{i=Math.floor(Math.random()*FRASES.length)}while(i===fraseI);fraseI=i;var el=document.getElementById("frase");if(el)el.textContent=FRASES[i];var fc=document.getElementById("frase-cfg");if(fc)fc.textContent=FRASES[i]}
-function programarSync(){if(!supabase)return;clearTimeout(syncTimer);syncTimer=setTimeout(sincronizar,2500)}
+function pintarFiados() { /* TODO */ }
 
-async function sincronizar(){
-  if(!supabase||syncing)return;syncing=true;badge("Sincronizando...","#4D96FF");
-  try{
-    var dias=Object.keys(DB);
-    for(var i=0;i<dias.length;i++){var fecha=dias[i],data=DB[fecha],row={fecha:fecha};for(var j=0;j<SABORES.length;j++)row[SABORES[j].id]=data[SABORES[j].id]||0;var res=await supabase.from("ventas").upsert(row,{onConflict:"fecha"});if(res.error)console.warn("Error upsert:",res.error)}
-    var r=await supabase.from("ventas").select("*");
-    if(!r.error&&r.data){var cambios=false;r.data.forEach(function(rr){var f=rr.fecha;if(!DB[f]){DB[f]={};cambios=true}for(var j=0;j<SABORES.length;j++){var vr=parseInt(rr[SABORES[j].id])||0,vl=parseInt(DB[f][SABORES[j].id])||0;if(vr>vl){DB[f][SABORES[j].id]=vr;cambios=true}}});if(cambios)guardarLocal()}
-    try{var fr=await supabase.from("fiados").select("*").order("id",{ascending:false});if(!fr.error&&fr.data){fiados=fr.data.map(function(f){return{id:f.id,cliente:f.cliente,telefono:f.telefono||"",fecha:f.fecha,items:f.items||[],total:f.total,abonado:f.abonado,notas:f.notas||"",estado:f.estado,created_at:f.created_at}});guardarFiadosLocal()}}catch(fe){console.warn("Fiados sync:",fe)}
-    badge("Sincronizado","#6BCB77");setTimeout(function(){badge("Supabase activo","rgba(255,255,255,.35)")},2500)
-  }catch(e){console.warn("Sync error:",e);badge("Sin conexion","#FF8787");setTimeout(function(){badge("Local","rgba(255,255,255,.35)")},3000)}
-  finally{syncing=false;pintarTodo()}
+function pintarTodo() { pintarVentas(); if (vista==="historial") pintarHistorial(); if (vista==="stats") pintarStats(); if (vista==="fiados") pintarFiados(); }
+
+// === NAV ===
+function ir(v) {
+  vista = v;
+  var secs = ["ventas","historial","stats","fiados","config"];
+  for (var i=0;i<secs.length;i++) {
+    var e = document.getElementById("v-" + secs[i]); if (e) e.style.display = secs[i] === v ? "block" : "none";
+    var b = document.getElementById("nb-" + secs[i]); if (b) b.className = "nb" + (secs[i] === v ? " on" : "");
+  }
+  if (v==="historial") pintarHistorial();
+  if (v==="stats") pintarStats();
+  if (v==="fiados") pintarFiados();
+  L("Navegar a: " + v);
 }
 
-async function poll(){if(!supabase||syncing)return;try{var r=await supabase.from("ventas").select("*");if(r.error||!r.data)return;var cambios=false;r.data.forEach(function(rr){var f=rr.fecha;if(!DB[f]){DB[f]={};cambios=true}for(var j=0;j<SABORES.length;j++){var vr=parseInt(rr[SABORES[j].id])||0,vl=parseInt(DB[f][SABORES[j].id])||0;if(vr>vl){DB[f][SABORES[j].id]=vr;cambios=true}}});if(cambios){guardarLocal();pintarTodo();badge("Actualizado","#6BCB77");setTimeout(function(){badge("Supabase activo","rgba(255,255,255,.35)")},2000)}}catch(e){}}
+// === MODAL FIADOS (simplificado) ===
+function abrirModalNuevoFiado() { alert("Funcionalidad de Fiados - proximamente"); }
 
-async function probarConexion(){try{var r=await supabase.from("ventas").select("fecha",{count:"exact",head:true});if(r.error){mostrarCSt("Error: "+r.error.message,"#FF8787")}else{mostrarCSt("Conexion exitosa","#6BCB77")}}catch(e){mostrarCSt(e.message,"#FF8787")}}
-function mostrarCSt(msg,color){var el=document.getElementById("cst");if(!el)return;el.textContent=msg;el.style.color=color;el.style.background=color+"22";el.style.border="1px solid "+color+"44";el.style.display="block";setTimeout(function(){el.style.display="none"},4000)}
-
-function abrirModalNuevoFiado(){editandoFiado=null;document.getElementById("modal-titulo").textContent="Nuevo Fiado";document.getElementById("fiado-id").value="";document.getElementById("fiado-cliente").value="";document.getElementById("fiado-telefono").value="";document.getElementById("fiado-notas").value="";document.getElementById("fiado-fecha").value=hoy();document.getElementById("fiado-items").innerHTML='<div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px">Productos:</div>';agregarItemFiado();actualizarTotalFiado();document.getElementById("modal-fiado").classList.add("open")}
-function cerrarModal(){document.getElementById("modal-fiado").classList.remove("open")}
-function cerrarModalAbono(){document.getElementById("modal-abono").classList.remove("open")}
-
-function agregarItemFiado(){var container=document.getElementById("fiado-items"),div=document.createElement("div");div.className="mifila";var opts="";for(var i=0;i<SABORES.length;i++)opts+='<option value="'+SABORES[i].id+'">'+SABORES[i].emoji+" "+SABORES[i].nombre+'</option>';div.innerHTML='<select onchange="actualizarTotalFiado()">'+opts+'</select><input type="number" value="1" min="1" onchange="actualizarTotalFiado()" style="width:60px"><button onclick="this.parentElement.remove();actualizarTotalFiado()" style="background:rgba(255,100,100,.15);border:1px solid rgba(255,100,100,.3);color:#FF8787;border-radius:8px;padding:6px 10px;font-weight:700;font-size:12px">X</button>';container.appendChild(div)}
-function actualizarTotalFiado(){var filas=document.querySelectorAll("#fiado-items .mifila"),total=0;for(var i=0;i<filas.length;i++){var sel=filas[i].querySelector("select"),cant=parseInt(filas[i].querySelector("input").value)||0;for(var j=0;j<SABORES.length;j++){if(SABORES[j].id===sel.value){total+=cant*SABORES[j].precio;break}}}document.getElementById("fiado-total").textContent=cop(total)}
-
-async function guardarFiado(){var cliente=document.getElementById("fiado-cliente").value.trim();if(!cliente){toast("Ingresa el nombre del cliente");return}var telefono=document.getElementById("fiado-telefono").value.trim(),notas=document.getElementById("fiado-notas").value.trim(),fecha=document.getElementById("fiado-fecha").value;var filas=document.querySelectorAll("#fiado-items .mifila"),items=[];for(var i=0;i<filas.length;i++){var sel=filas[i].querySelector("select"),cant=parseInt(filas[i].querySelector("input").value)||0;if(cant>0){for(var j=0;j<SABORES.length;j++){if(SABORES[j].id===sel.value){items.push({sabor:sel.value,nombre:SABORES[j].nombre,cantidad:cant,precio:SABORES[j].precio});break}}}}if(!items.length){toast("Agrega al menos un producto");return}var total=0;for(var i=0;i<items.length;i++)total+=items[i].cantidad*items[i].precio;var fiado={cliente:cliente,telefono:telefono,fecha:fecha,items:items,total:total,abonado:0,notas:notas,estado:"pendiente"};if(supabase){var res=await supabase.from("fiados").insert(fiado).select();if(res.error){toast("Error: "+res.error.message);return}if(res.data&&res.data[0])fiado.id=res.data[0].id}else{fiado.id=Date.now()}fiados.unshift(fiado);guardarFiadosLocal();cerrarModal();toast("Fiado registrado con "+cliente);pintarFiados();programarSync()}
-
-function pintarFiados(){var pendienteTotal=0,activos=0,cobradoHoy=0;for(var i=0;i<fiados.length;i++){var f=fiados[i];if(f.estado==="pendiente"){pendienteTotal+=f.total-(f.abonado||0);activos++;cobradoHoy+=f.abonado||0}}document.getElementById("f-pendiente").textContent=cop(pendienteTotal);document.getElementById("f-activos").textContent=activos;document.getElementById("f-cobrado").textContent=cop(cobradoHoy);var lista=document.getElementById("lista-fiados");if(!lista)return;lista.innerHTML="";if(!fiados.length){lista.innerHTML='<div class="card" style="text-align:center;color:rgba(255,255,255,.25);padding:36px 16px">Sin fiados registrados</div>';return}for(var i=0;i<fiados.length;i++){var f=fiados[i],saldo=f.total-(f.abonado||0),div=document.createElement("div");div.className="frow"+(f.estado==="pagado"?" pagado":"");var fechaF=fechaLinda(f.fecha),itemsStr=(f.items||[]).map(function(it){return it.cantidad+" "+it.nombre}).join(", ");div.innerHTML='<div class="fhead"><div class="fnombre">'+f.cliente+(f.telefono?" ":"")+'</div><div class="festado '+f.estado+'">'+(f.estado==="pendiente"?"Pendiente":"Pagado")+'</div></div><div class="fdet">'+fechaF+" - "+itemsStr+(f.notas?" - "+f.notas:"")+'</div><div class="fmonto"><div class="ftotal">'+cop(saldo)+((f.estado==="pendiente")?' <span class="fabono">(abono: '+cop(f.abonado||0)+')</span>':"")+'</div></div>'+(f.estado==="pendiente"?'<div class="facciones"><button class="btn-abonar" onclick="abrirModalAbono('+f.id+')">Abonar</button><button class="btn-pagar" onclick="pagarFiado('+f.id+')">Pagar todo</button><button class="btn-cancel" onclick="cancelarFiado('+f.id+')">X</button></div>':"");lista.appendChild(div)}}
-
-async function pagarFiado(id){if(!confirm("Marcar como pagado?"))return;var fiado=null;for(var i=0;i<fiados.length;i++){if(fiados[i].id===id){fiado=fiados[i];break}}if(!fiado)return;if(supabase){var r=await supabase.from("fiados").update({estado:"pagado",abonado:fiado.total}).eq("id",id);if(r.error){toast("Error: "+r.error.message);return}}fiado.estado="pagado";fiado.abonado=fiado.total;guardarFiadosLocal();toast("Fiado marcado como pagado");pintarFiados();programarSync()}
-function abrirModalAbono(id){var fiado=null;for(var i=0;i<fiados.length;i++){if(fiados[i].id===id){fiado=fiados[i];break}}if(!fiado)return;document.getElementById("abono-fiado-id").value=id;document.getElementById("abono-cliente").textContent=fiado.cliente;document.getElementById("abono-monto").value="";document.getElementById("abono-fecha").value=hoy();document.getElementById("modal-abono").classList.add("open")}
-async function guardarAbono(){var id=parseInt(document.getElementById("abono-fiado-id").value),monto=parseInt(document.getElementById("abono-monto").value),fecha=document.getElementById("abono-fecha").value;if(!monto||monto<=0){toast("Ingresa un monto valido");return}var fiado=null;for(var i=0;i<fiados.length;i++){if(fiados[i].id===id){fiado=fiados[i];break}}if(!fiado)return;var nuevoAbonado=(fiado.abonado||0)+monto,nuevoEstado=nuevoAbonado>=fiado.total?"pagado":"pendiente";if(supabase){var r1=await supabase.from("abonos").insert({fiado_id:id,monto:monto,fecha:fecha});if(r1.error){toast("Error: "+r1.error.message);return}var r2=await supabase.from("fiados").update({abonado:nuevoAbonado,estado:nuevoEstado}).eq("id",id);if(r2.error){toast("Error: "+r2.error.message);return}}fiado.abonado=nuevoAbonado;fiado.estado=nuevoEstado;guardarFiadosLocal();cerrarModalAbono();toast("Abono de "+cop(monto)+" registrado");pintarFiados();programarSync()}
-async function cancelarFiado(id){if(!confirm("Cancelar este fiado?"))return;if(supabase){var r=await supabase.from("fiados").update({estado:"cancelado"}).eq("id",id);if(r.error){toast("Error: "+r.error.message);return}}for(var i=0;i<fiados.length;i++){if(fiados[i].id===id){fiados[i].estado="cancelado";break}}guardarFiadosLocal();toast("Fiado cancelado");pintarFiados();programarSync()}
-
-function pintarTodo(){pintarVentas();if(vista==="historial")pintarHistorial();if(vista==="stats")pintarStats();if(vista==="fiados")pintarFiados()}
-function ir(v){vista=v;var secs=["ventas","historial","stats","fiados","config"];for(var i=0;i<secs.length;i++){var n=secs[i];var se=document.getElementById("v-"+n);if(se)se.style.display=n===v?"block":"none";var nb=document.getElementById("nb-"+n);if(nb){if(n===v)nb.className="nb on";else nb.className="nb"}}if(v==="historial")pintarHistorial();if(v==="stats")pintarStats();if(v==="fiados")pintarFiados();if(v==="config"){var fc=document.getElementById("frase-cfg");if(fc)fc.textContent=FRASES[fraseI]||""}}
-
-console.log("DEBUG: iniciando app...");
+// === INIT ===
+L("Cargando datos...");
 cargar();
-rotateFrase();
+L("Pintando ventas...");
 pintarVentas();
-initSupabase();
-badge("Supabase activo", "rgba(255,255,255,.35)");
-sincronizar();
-setInterval(poll, 30000);
-setInterval(rotateFrase, 60000);
-console.log("DEBUG: app iniciada");
+L("LISTO!");
+DBG.style.borderLeftColor = "#6BCB77";
 </script>
 
 </body>
