@@ -4,19 +4,26 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Bolis de Mari 🧊</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Pacifico&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:linear-gradient(160deg,#0a0f1e,#0d1b2a 40%,#112240);min-height:100vh;font-family:Nunito,sans-serif;color:#fff;padding:10px 10px 80px}
-#hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:8px}
-.logo{font-family:Pacifico,cursive;color:#FFD93D;font-size:20px}
-.nav{display:flex;gap:4px;margin-bottom:10px}
+#hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:6px}
+.logo-img{width:38px;height:38px;border-radius:8px;flex-shrink:0;object-fit:cover}
+.logo-wrap{display:flex;align-items:center;gap:8px}
+.logo-txt{font-family:Pacifico,cursive;color:#FFD93D;font-size:20px}
+.gan-wrap{text-align:right}
+.gan-lbl{font-size:10px;color:rgba(255,255,255,.3)}
+.gan-val{font-weight:900;color:#FFD93D;font-size:18px}
+.nav{display:flex;gap:4px;margin-bottom:8px}
 .nb{flex:1;padding:8px 0;border-radius:8px;border:none;font-weight:700;font-size:11px;text-align:center;background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);cursor:pointer}
 .nb.on{background:#FFD93D;color:#0a0f1e}
 .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px;margin-bottom:8px}
+.ctit{font-size:13px;font-weight:800;color:rgba(255,255,255,.6);margin-bottom:8px}
 .fila{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
-.emoji{font-size:24px;width:32px;text-align:center}
+.emoji{font-size:24px;width:32px;text-align:center;flex-shrink:0}
 .snombre{flex:1;font-weight:700;font-size:13px}
-.sctrl{display:flex;align-items:center;gap:4px}
+.sctrl{display:flex;align-items:center;gap:4px;flex-shrink:0}
 .sctrl button{width:38px;height:38px;border-radius:8px;border:none;font-weight:900;font-size:20px;cursor:pointer}
 .bm{background:rgba(255,100,100,.18);color:#FF8787}
 .bp{background:rgba(107,203,119,.22);color:#6BCB77}
@@ -26,18 +33,52 @@ body{background:linear-gradient(160deg,#0a0f1e,#0d1b2a 40%,#112240);min-height:1
 .col{text-align:center;min-width:70px}
 .lbl{font-size:10px;color:rgba(255,255,255,.3)}
 .val{font-size:20px;font-weight:900}
-#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(107,203,119,.9);color:#fff;padding:8px 20px;border-radius:20px;font-weight:700;font-size:13px;opacity:0;transition:.3s;pointer-events:none;z-index:999}
-#toast.on{opacity:1}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#6BCB77;color:#fff;padding:8px 20px;border-radius:20px;font-weight:700;font-size:13px;opacity:0;transition:.3s;pointer-events:none;z-index:999}
+.toast.on{opacity:1}
 button{cursor:pointer;font-family:Nunito,sans-serif}
-@media(max-width:400px){.logo{font-size:17px}.val{font-size:17px}}
+.badge{font-size:10px;color:rgba(255,255,255,.3)}
+/* Fiados */
+.frow{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:10px 12px;margin-bottom:6px}
+.fhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.fnombre{font-weight:800;font-size:13px}
+.festado{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700}
+.festado.pendiente{background:rgba(255,217,61,.15);color:#FFD93D}
+.festado.pagado{background:rgba(107,203,119,.15);color:#6BCB77}
+.fdet{font-size:11px;color:rgba(255,255,255,.4);margin-bottom:4px}
+.fmon{display:flex;justify-content:space-between;align-items:center}
+.ftot{font-weight:900;font-size:16px;color:#FFD93D}
+.fabono{font-size:11px;color:rgba(255,255,255,.3)}
+.fbtn{margin-top:6px;display:flex;gap:4px}
+.fbtn button{padding:5px 10px;border-radius:6px;border:none;font-weight:700;font-size:11px;cursor:pointer}
+.btn-abonar{background:rgba(77,150,255,.2);border:1px solid rgba(77,150,255,.4);color:#4D96FF}
+.btn-pagar{background:rgba(107,203,119,.2);border:1px solid rgba(107,203,119,.4);color:#6BCB77}
+.btn-cancel{background:rgba(255,100,100,.15);border:1px solid rgba(255,100,100,.3);color:#FF8787}
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal.open{display:flex}
+.minner{background:#0d1b2a;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:20px;width:100%;max-width:400px;max-height:90vh;overflow:auto}
+.minner h3{font-size:15px;margin-bottom:12px}
+.minner label{font-size:11px;color:rgba(255,255,255,.4);display:block;margin:8px 0 3px}
+.minner input,.minner select{width:100%;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:13px;font-family:Nunito,sans-serif;outline:none}
+.minner input:focus{border-color:#4D96FF}
+.mbtn{display:flex;gap:8px;margin-top:14px}
+.mbtn button{flex:1;padding:10px;border-radius:8px;border:none;font-weight:800;font-size:12px;cursor:pointer}
+@media(max-width:400px){.logo-txt{font-size:17px}.val{font-size:17px}}
 </style>
 </head>
 <body>
 
 <div id="hdr">
-  <div><span class="logo">🧊 Bolis de Mari</span></div>
-  <div style="text-align:right"><div style="font-size:10px;color:rgba(255,255,255,.3)">Hoy</div><div id="ganHoy" style="font-weight:900;color:#FFD93D;font-size:18px">$0</div></div>
+  <div class="logo-wrap">
+    <img src="logo.png" alt="Logo" class="logo-img">
+    <div><div class="logo-txt">Bolis de Mari</div></div>
+  </div>
+  <div class="gan-wrap">
+    <div class="gan-lbl">Hoy</div>
+    <div class="gan-val" id="ganHoy">$0</div>
+  </div>
 </div>
+<div class="badge" id="badge">💾 Local</div>
 
 <div class="nav">
   <button class="nb on" id="nb-ventas" onclick="ir('ventas')">🧊 Ventas</button>
@@ -48,7 +89,7 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
 </div>
 
 <div id="v-ventas">
-  <div class="card res">
+  <div class="card res" id="resumen">
     <div class="col"><div class="lbl">Vendidos</div><div class="val" style="color:#6BCB77" id="r-total">0</div></div>
     <div class="col"><div class="lbl">Ganancia</div><div class="val" style="color:#FFD93D" id="r-gan">$0</div></div>
     <div class="col"><div class="lbl">Prom/dia</div><div class="val" style="color:#4D96FF" id="r-prom">0</div></div>
@@ -58,18 +99,18 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
 </div>
 
 <div id="v-historial" style="display:none">
-  <b>📅 Historial</b> <span id="ndias" style="font-size:11px;color:rgba(255,255,255,.3)"></span>
-  <div id="lista-hist" style="margin-top:8px"></div>
+  <div class="ctit">📅 Historial (<span id="ndias">0</span> dias)</div>
+  <div id="lista-hist"></div>
 </div>
 
 <div id="v-stats" style="display:none">
   <div class="card" id="kpis"></div>
-  <div class="card" id="ranking"></div>
+  <div class="card" id="ranking"><div class="ctit">🏆 Ranking</div></div>
 </div>
 
 <div id="v-fiados" style="display:none">
-  <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-    <b>📒 Fiados</b>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <div class="ctit" style="margin:0">📒 Fiados</div>
     <button onclick="abrirModalNuevoFiado()" style="background:#FFD93D;color:#000;border:none;padding:6px 12px;border-radius:8px;font-weight:800;font-size:12px">+ Nuevo</button>
   </div>
   <div class="card res">
@@ -80,20 +121,67 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
 </div>
 
 <div id="v-config" style="display:none">
-  <b>⚙️ Config</b>
-  <div class="card" style="margin-top:8px;font-size:12px;color:rgba(255,255,255,.4)">
-    App funciona con datos locales en este dispositivo.
+  <div class="ctit">⚙️ Configuración</div>
+  <div class="card" style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.8">
+    💾 Datos guardados localmente en este dispositivo<br>
+    ☁️ <span id="cfg-supabase">Supabase no conectado</span><br>
+    <button onclick="probarConexion()" style="margin-top:6px;padding:6px 14px;border-radius:6px;border:1px solid rgba(107,203,119,.4);background:rgba(107,203,119,.15);color:#6BCB77;font-weight:700;font-size:11px;cursor:pointer">🔌 Probar conexion</button>
+    <div id="cst" style="margin-top:6px;font-weight:700;display:none"></div>
   </div>
 </div>
 
-<div id="toast"></div>
+<div class="toast" id="toast"></div>
+
+<!-- Modal Fiado -->
+<div class="modal" id="modal-fiado">
+  <div class="minner">
+    <h3 id="modal-titulo">📒 Nuevo Fiado</h3>
+    <input id="fiado-id" type="hidden">
+    <label>Cliente</label>
+    <input id="fiado-cliente" placeholder="Nombre del cliente">
+    <label>Telefono (opcional)</label>
+    <input id="fiado-telefono" placeholder="300 123 4567">
+    <label>Notas (opcional)</label>
+    <input id="fiado-notas" placeholder="Descripcion">
+    <label>Fecha</label>
+    <input id="fiado-fecha" type="date">
+    <div style="margin-top:10px"><b style="font-size:12px">Productos:</b></div>
+    <div id="fiado-items"></div>
+    <button onclick="agregarItemFiado()" style="margin-top:4px;width:100%;padding:6px;border-radius:6px;border:1px solid rgba(77,150,255,.4);background:rgba(77,150,255,.1);color:#4D96FF;font-weight:700;font-size:11px;cursor:pointer">+ Agregar</button>
+    <div style="display:flex;justify-content:space-between;margin-top:10px;font-weight:900;font-size:17px;color:#FFD93D"><span>Total:</span><span id="fiado-total">$0</span></div>
+    <div class="mbtn">
+      <button onclick="cerrarModal()" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.5)">Cancelar</button>
+      <button onclick="guardarFiado()" style="background:#FFD93D;color:#000">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Abono -->
+<div class="modal" id="modal-abono">
+  <div class="minner">
+    <h3>💰 Abono</h3>
+    <input id="abono-fiado-id" type="hidden">
+    <div style="margin-bottom:6px;font-size:13px">Cliente: <b id="abono-cliente"></b></div>
+    <label>Monto</label>
+    <input id="abono-monto" type="number" placeholder="5000">
+    <label>Fecha</label>
+    <input id="abono-fecha" type="date">
+    <div class="mbtn">
+      <button onclick="cerrarModalAbono()" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.5)">Cancelar</button>
+      <button onclick="guardarAbono()" style="background:#4D96FF;color:#fff">Registrar</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" async></script>
 
 <script>
 "use strict";
 // ============================
-// SABORES
+// SABORES (hielo primero)
 // ============================
 var SABORES = [
+  {id:"hielo",nombre:"Hielo",emoji:"🧊",precio:500},
   {id:"coco",nombre:"Coco",emoji:"🥥",precio:1000},
   {id:"pina",nombre:"Pina",emoji:"🍍",precio:1000},
   {id:"tamarindo",nombre:"Tamarindo",emoji:"🟤",precio:1000},
@@ -105,29 +193,120 @@ var SABORES = [
   {id:"mango",nombre:"Mango",emoji:"🥭",precio:1000},
   {id:"guanabana",nombre:"Guanabana",emoji:"💚",precio:1000},
   {id:"maracuya",nombre:"Maracuya",emoji:"🟡",precio:1000},
-  {id:"hielo",nombre:"Hielo",emoji:"🧊",precio:500},
   {id:"chocolate",nombre:"Chocolate",emoji:"🍫",precio:1000}
 ];
 
 // ============================
-// ESTADO
+// SUPABASE
+// ============================
+var SUPABASE_URL = "https://dysbrehrmumijbkkhbzs.supabase.co";
+var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5c2JyZWhybXVtaWpia2toYnpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzODg0NjQsImV4cCI6MjA5OTk2NDQ2NH0.C-0502AFKhXqak9JTVR2Ypz-aEJfQUWir3o0gL_egHk";
+var supabase = null;
+var syncing = false;
+
+function initSupabase() {
+  var lib = window.supabase || window.supabaseJs;
+  if (lib && lib.createClient) {
+    try { supabase = lib.createClient(SUPABASE_URL, SUPABASE_KEY); console.log("Supabase OK"); actualizarEstadoSupabase(true); } catch(e) { console.warn("Supabase error:", e); }
+  } else {
+    setTimeout(initSupabase, 500);
+  }
+}
+
+function actualizarEstadoSupabase(conectado) {
+  var e = document.getElementById("cfg-supabase");
+  if (e) e.textContent = conectado ? "✅ Supabase conectado" : "☁️ Supabase no conectado";
+  var b = document.getElementById("badge");
+  if (b) b.textContent = conectado ? "☁️ Supabase" : "💾 Local";
+}
+
+async function sincronizar() {
+  if (!supabase || syncing) return;
+  syncing = true;
+  try {
+    var dias = Object.keys(DB);
+    for (var i = 0; i < dias.length; i++) {
+      var f = dias[i], data = DB[f], row = {fecha:f};
+      for (var j = 0; j < SABORES.length; j++) row[SABORES[j].id] = data[SABORES[j].id] || 0;
+      var r = await supabase.from("ventas").upsert(row, {onConflict:"fecha"});
+      if (r.error) console.warn("upsert error:", r.error);
+    }
+    var r2 = await supabase.from("ventas").select("*");
+    if (!r2.error && r2.data) {
+      var cambios = false;
+      r2.data.forEach(function(rr) {
+        var f = rr.fecha;
+        if (!DB[f]) { DB[f] = {}; cambios = true; }
+        for (var j = 0; j < SABORES.length; j++) {
+          var vr = parseInt(rr[SABORES[j].id]) || 0;
+          var vl = parseInt(DB[f][SABORES[j].id]) || 0;
+          if (vr > vl) { DB[f][SABORES[j].id] = vr; cambios = true; }
+        }
+      });
+      if (cambios) { guardar(); pintarTodo(); }
+    }
+    // Fiados sync
+    try {
+      var fr = await supabase.from("fiados").select("*").order("id", {ascending:false});
+      if (!fr.error && fr.data) {
+        fiados = fr.data.map(function(f) { return {id:f.id,cliente:f.cliente,telefono:f.telefono||"",fecha:f.fecha,items:f.items||[],total:f.total,abonado:f.abonado||0,notas:f.notas||"",estado:f.estado}; });
+        guardarFiadosLocal();
+        if (vista === "fiados") pintarFiados();
+      }
+    } catch(fe) { console.warn("fiados sync:", fe); }
+  } catch(e) { console.warn("sync error:", e); }
+  syncing = false;
+}
+
+function programarSync() {
+  if (supabase) { clearTimeout(window._st); window._st = setTimeout(sincronizar, 3000); }
+}
+
+async function probarConexion() {
+  if (!supabase) { mostrarCSt("Supabase no disponible"); return; }
+  try {
+    var r = await supabase.from("ventas").select("fecha", {count:"exact",head:true});
+    mostrarCSt(r.error ? "Error: "+r.error.message : "✅ Conexion exitosa", r.error ? "#FF8787" : "#6BCB77");
+  } catch(e) { mostrarCSt(e.message, "#FF8787"); }
+}
+function mostrarCSt(msg, color) {
+  var el = document.getElementById("cst");
+  if (!el) return;
+  el.textContent = msg; el.style.color = color || "#aaa";
+  el.style.display = "block";
+  setTimeout(function() { el.style.display = "none"; }, 3000);
+}
+
+// ============================
+// ESTADO / STORAGE
 // ============================
 var DB = {};
 var SK = "bolismari_v5";
 var vista = "ventas";
 var fiados = [];
+var toastT;
+var editandoFiadoId = null;
 
-// ============================
-// HELPERS
-// ============================
-function hoy() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
-function cop(n) { return "$" + Number(n).toLocaleString("es-CO"); }
-function fechaLinda(k) { if (!k) return ""; var p = k.split("-"); var M = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]; return parseInt(p[2]) + " " + M[parseInt(p[1])-1] + " " + p[0]; }
-function cargar() { try { var r = localStorage.getItem(SK); if (r) DB = JSON.parse(r); } catch(e) {} }
+function cargar() {
+  try { var r = localStorage.getItem(SK); if (r) DB = JSON.parse(r); } catch(e) {}
+  try { var f = localStorage.getItem("bolismari_fiados"); if (f) fiados = JSON.parse(f); } catch(e) {}
+}
 function guardar() { try { localStorage.setItem(SK, JSON.stringify(DB)); } catch(e) {} }
+function guardarFiadosLocal() { try { localStorage.setItem("bolismari_fiados", JSON.stringify(fiados)); } catch(e) {} }
 
-function getDia(k) { var d = DB[k] || {}; var o = {}; for (var i=0; i<SABORES.length; i++) o[SABORES[i].id] = d[SABORES[i].id] || 0; return o; }
-function totales(k) { var d = getDia(k); var b = 0; var g = 0; for (var i=0; i<SABORES.length; i++) { b += d[SABORES[i].id]; g += d[SABORES[i].id] * SABORES[i].precio; } return {bolis:b, ganancia:g}; }
+function hoy() { var d = new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function cop(n) { return "$"+Number(n).toLocaleString("es-CO"); }
+function fechaLinda(k) { if (!k) return ""; var p=k.split("-"); var M=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]; return parseInt(p[2])+" "+M[parseInt(p[1])-1]+" "+p[0]; }
+
+function getDia(k) { var d=DB[k]||{},o={}; for (var i=0;i<SABORES.length;i++) o[SABORES[i].id]=d[SABORES[i].id]||0; return o; }
+function totales(k) { var d=getDia(k),b=0,g=0; for (var i=0;i<SABORES.length;i++) { b+=d[SABORES[i].id]; g+=d[SABORES[i].id]*SABORES[i].precio; } return {bolis:b,ganancia:g}; }
+
+function toast(msg) {
+  var el = document.getElementById("toast");
+  if (!el) return;
+  el.textContent = msg; el.classList.add("on"); clearTimeout(toastT);
+  toastT = setTimeout(function() { el.classList.remove("on"); }, 2000);
+}
 
 // ============================
 // VENDER
@@ -138,23 +317,17 @@ function vender(id, delta) {
   DB[k][id] = Math.max(0, (DB[k][id] || 0) + delta);
   guardar();
   pintarVentas();
+  programarSync();
 }
 
 // ============================
-// PINTAR VENTAS
+// PINTAR
 // ============================
 function pintarVentas() {
-  var k = hoy();
-  var dia = getDia(k);
-  var t = totales(k);
-
-  var e = document.getElementById("ganHoy");
-  if (e) e.textContent = cop(t.ganancia);
-  e = document.getElementById("r-total");
-  if (e) e.textContent = t.bolis;
-  e = document.getElementById("r-gan");
-  if (e) e.textContent = cop(t.ganancia);
-
+  var k = hoy(), dia = getDia(k), t = totales(k);
+  var e = document.getElementById("ganHoy"); if (e) e.textContent = cop(t.ganancia);
+  e = document.getElementById("r-total"); if (e) e.textContent = t.bolis;
+  e = document.getElementById("r-gan"); if (e) e.textContent = cop(t.ganancia);
   var dias = Object.keys(DB);
   if (dias.length > 0) {
     var tb = 0, tg = 0;
@@ -162,84 +335,54 @@ function pintarVentas() {
     e = document.getElementById("r-prom"); if (e) e.textContent = Math.round(tb/dias.length);
     e = document.getElementById("r-promgan"); if (e) e.textContent = cop(Math.round(tg/dias.length));
   }
-
   var lista = document.getElementById("lista-sabores");
   if (!lista) return;
   lista.innerHTML = "";
-
   for (var i = 0; i < SABORES.length; i++) {
-    var s = SABORES[i];
-    var v = dia[s.id] || 0;
+    var s = SABORES[i], v = dia[s.id] || 0;
     var d = document.createElement("div");
     d.className = "fila";
-    d.innerHTML =
-      '<div class="emoji">' + s.emoji + '</div>' +
-      '<div class="snombre">' + s.nombre + '</div>' +
-      '<div class="sctrl">' +
-        '<button class="bm" onclick="vender(\'' + s.id + '\',-1)">-</button>' +
-        '<div class="scant">' + v + '</div>' +
-        '<button class="bp" onclick="vender(\'' + s.id + '\',1)">+</button>' +
-      '</div>' +
-      '<div class="sgan">' + cop(v * s.precio) + '</div>';
+    d.innerHTML = '<div class="emoji">'+s.emoji+'</div><div class="snombre">'+s.nombre+'<br><span style="font-size:10px;color:rgba(255,255,255,.2)">'+cop(s.precio)+'</span></div><div class="sctrl"><button class="bm" onclick="vender(\''+s.id+'\',-1)">-</button><div class="scant">'+v+'</div><button class="bp" onclick="vender(\''+s.id+'\',1)">+</button></div><div class="sgan">'+cop(v*s.precio)+'</div>';
     lista.appendChild(d);
   }
 }
 
-// ============================
-// PINTAR HISTORIAL
-// ============================
 function pintarHistorial() {
   var dias = Object.keys(DB).sort(function(a,b) { return b.localeCompare(a); });
-  var e = document.getElementById("ndias");
-  if (e) e.textContent = dias.length + " dia(s)";
-  var lista = document.getElementById("lista-hist");
-  if (!lista) return;
+  var e = document.getElementById("ndias"); if (e) e.textContent = dias.length;
+  var lista = document.getElementById("lista-hist"); if (!lista) return;
   lista.innerHTML = "";
   if (dias.length === 0) { lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2);padding:30px'>Sin registros aun</div>"; return; }
   for (var i = 0; i < dias.length; i++) {
-    var k = dias[i];
-    var t = totales(k);
+    var k = dias[i], t = totales(k);
     var d = document.createElement("div");
     d.className = "card";
-    d.innerHTML = '<div style="display:flex;justify-content:space-between"><b>' + fechaLinda(k) + '</b> <span style="color:#FFD93D;font-weight:900">' + cop(t.ganancia) + '</span></div><div style="font-size:11px;color:rgba(255,255,255,.3)">' + t.bolis + " bolis vendidos</div>";
+    d.innerHTML = '<div style="display:flex;justify-content:space-between"><b>'+fechaLinda(k)+'</b> <span style="color:#FFD93D;font-weight:900">'+cop(t.ganancia)+'</span></div><div style="font-size:11px;color:rgba(255,255,255,.3)">'+t.bolis+" bolis</div>";
     lista.appendChild(d);
   }
 }
 
-// ============================
-// PINTAR STATS
-// ============================
 function pintarStats() {
   var dias = Object.keys(DB).sort();
   var kpis = document.getElementById("kpis");
   if (!kpis) return;
   if (dias.length === 0) { kpis.innerHTML = "<div style='color:rgba(255,255,255,.3);padding:20px;text-align:center'>Registra ventas para ver estadisticas</div>"; return; }
-  var nd = dias.length;
-  var tg = 0;
+  var nd = dias.length, tg = 0;
   for (var i = 0; i < nd; i++) tg += totales(dias[i]).ganancia;
   var prom = Math.round(tg/nd);
-  kpis.innerHTML =
-    '<div class="col"><div class="lbl">Total</div><div class="val" style="color:#FFD93D">' + cop(tg) + '</div></div>' +
-    '<div class="col"><div class="lbl">Dias</div><div class="val" style="color:#4D96FF">' + nd + '</div></div>' +
-    '<div class="col"><div class="lbl">Prom/dia</div><div class="val" style="color:#6BCB77">' + cop(prom) + '</div></div>';
-
+  kpis.innerHTML = '<div class="col"><div class="lbl">Total</div><div class="val" style="color:#FFD93D">'+cop(tg)+'</div></div><div class="col"><div class="lbl">Dias</div><div class="val" style="color:#4D96FF">'+nd+'</div></div><div class="col"><div class="lbl">Prom/dia</div><div class="val" style="color:#6BCB77">'+cop(prom)+'</div></div>';
   var porSabor = [];
   for (var i = 0; i < SABORES.length; i++) {
-    var s = SABORES[i];
-    var total = 0;
+    var s = SABORES[i], total = 0;
     for (var j = 0; j < dias.length; j++) total += getDia(dias[j])[s.id] || 0;
     if (total > 0) porSabor.push({nombre:s.nombre, emoji:s.emoji, total:total, ganancia:total*s.precio});
   }
   porSabor.sort(function(a,b) { return b.total - a.total; });
   var rk = document.getElementById("ranking");
   if (rk && porSabor.length > 0) {
-    rk.innerHTML = '<b>Ranking de sabores</b>';
+    rk.innerHTML = '<div class="ctit">🏆 Ranking de sabores</div>';
     for (var i = 0; i < Math.min(porSabor.length, 6); i++) {
-      rk.innerHTML += '<div style="display:flex;align-items:center;gap:8px;margin-top:6px">' +
-        '<span style="font-size:16px">' + porSabor[i].emoji + '</span>' +
-        '<span style="flex:1;font-size:13px">' + porSabor[i].nombre + '</span>' +
-        '<span style="color:#6BCB77;font-weight:800">' + porSabor[i].total + '</span>' +
-        '<span style="color:#FFD93D;font-weight:700;font-size:12px">' + cop(porSabor[i].ganancia) + '</span></div>';
+      rk.innerHTML += '<div style="display:flex;align-items:center;gap:8px;margin-top:6px"><span style="font-size:16px">'+porSabor[i].emoji+'</span><span style="flex:1;font-size:13px">'+porSabor[i].nombre+'</span><span style="color:#6BCB77;font-weight:800">'+porSabor[i].total+'</span><span style="color:#FFD93D;font-weight:700;font-size:12px">'+cop(porSabor[i].ganancia)+'</span></div>';
     }
   }
 }
@@ -248,28 +391,158 @@ function pintarStats() {
 // FIADOS
 // ============================
 function pintarFiados() {
-  var totalPendiente = 0, activos = 0;
+  var tp = 0, act = 0;
   for (var i = 0; i < fiados.length; i++) {
-    if (fiados[i].estado === "pendiente") { totalPendiente += fiados[i].total - (fiados[i].abonado || 0); activos++; }
+    if (fiados[i].estado === "pendiente") { tp += fiados[i].total - (fiados[i].abonado||0); act++; }
   }
-  var e = document.getElementById("f-pendiente"); if (e) e.textContent = cop(totalPendiente);
-  e = document.getElementById("f-activos"); if (e) e.textContent = activos;
+  var e = document.getElementById("f-pendiente"); if (e) e.textContent = cop(tp);
+  e = document.getElementById("f-activos"); if (e) e.textContent = act;
   var lista = document.getElementById("lista-fiados");
   if (!lista) return;
   lista.innerHTML = "";
-  if (fiados.length === 0) { lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2);padding:30px'>Sin fiados</div>"; return; }
+  if (fiados.length === 0) { lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2);padding:30px'>Sin fiados registrados</div>"; return; }
   for (var i = 0; i < fiados.length; i++) {
-    var f = fiados[i];
+    var f = fiados[i], saldo = f.total - (f.abonado||0), fechaF = fechaLinda(f.fecha);
+    var itemsStr = (f.items||[]).map(function(it) { return it.cantidad+" "+it.nombre; }).join(", ");
     var div = document.createElement("div");
-    div.className = "card";
-    div.innerHTML = '<div style="display:flex;justify-content:space-between"><b>' + f.cliente + '</b> <span style="color:#FFD93D;font-weight:900">' + cop(f.total - (f.abonado||0)) + '</span></div>';
+    div.className = "frow" + (f.estado==="pagado"?" pagado":"");
+    div.innerHTML = '<div class="fhead"><div class="fnombre">'+f.cliente+(f.telefono?" 📞":"")+'</div><div class="festado '+f.estado+'">'+(f.estado==="pendiente"?"Pendiente":"Pagado")+'</div></div><div class="fdet">'+fechaF+(itemsStr?" · "+itemsStr:"")+(f.notas?" · "+f.notas:"")+'</div><div class="fmon"><div class="ftot">'+cop(saldo)+(f.estado==="pendiente"?' <span class="fabono">(abonado: '+cop(f.abonado||0)+')</span>':"")+'</div></div>'+(f.estado==="pendiente"?'<div class="fbtn"><button class="btn-abonar" onclick="abrirModalAbono('+f.id+')">💰 Abonar</button><button class="btn-pagar" onclick="pagarFiado('+f.id+')">✅ Pagar</button><button class="btn-cancel" onclick="cancelarFiado('+f.id+')">✕</button></div>':"");
     lista.appendChild(div);
   }
 }
-function abrirModalNuevoFiado() { alert("Fiados: proximamente con Supabase"); }
+
+function abrirModalNuevoFiado() {
+  editandoFiadoId = null;
+  document.getElementById("modal-titulo").textContent = "📒 Nuevo Fiado";
+  document.getElementById("fiado-id").value = "";
+  document.getElementById("fiado-cliente").value = "";
+  document.getElementById("fiado-telefono").value = "";
+  document.getElementById("fiado-notas").value = "";
+  document.getElementById("fiado-fecha").value = hoy();
+  document.getElementById("fiado-items").innerHTML = "";
+  agregarItemFiado();
+  actualizarTotalFiado();
+  document.getElementById("modal-fiado").classList.add("open");
+}
+function cerrarModal() { document.getElementById("modal-fiado").classList.remove("open"); }
+function cerrarModalAbono() { document.getElementById("modal-abono").classList.remove("open"); }
+
+function agregarItemFiado() {
+  var container = document.getElementById("fiado-items");
+  var div = document.createElement("div");
+  div.style.cssText = "display:flex;gap:4px;align-items:center;margin-top:4px";
+  var opts = "";
+  for (var i = 0; i < SABORES.length; i++) opts += '<option value="'+SABORES[i].id+'">'+SABORES[i].emoji+" "+SABORES[i].nombre+'</option>';
+  div.innerHTML = '<select style="flex:2;padding:6px;border-radius:6px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:12px">'+opts+'</select><input type="number" value="1" min="1" style="width:55px;padding:6px;border-radius:6px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:12px"><button onclick="this.parentElement.remove();actualizarTotalFiado()" style="background:rgba(255,100,100,.15);border:1px solid rgba(255,100,100,.3);color:#FF8787;border-radius:6px;padding:6px 8px;font-weight:700;font-size:12px;cursor:pointer">✕</button>';
+  container.appendChild(div);
+}
+
+function actualizarTotalFiado() {
+  var filas = document.querySelectorAll("#fiado-items > div");
+  var total = 0;
+  for (var i = 0; i < filas.length; i++) {
+    var sel = filas[i].querySelector("select");
+    var cant = parseInt(filas[i].querySelector("input").value) || 0;
+    for (var j = 0; j < SABORES.length; j++) {
+      if (SABORES[j].id === sel.value) { total += cant * SABORES[j].precio; break; }
+    }
+  }
+  document.getElementById("fiado-total").textContent = cop(total);
+}
+
+async function guardarFiado() {
+  var cliente = document.getElementById("fiado-cliente").value.trim();
+  if (!cliente) { toast("Ingresa el nombre"); return; }
+  var telefono = document.getElementById("fiado-telefono").value.trim();
+  var notas = document.getElementById("fiado-notas").value.trim();
+  var fecha = document.getElementById("fiado-fecha").value;
+  var filas = document.querySelectorAll("#fiado-items > div");
+  var items = [];
+  for (var i = 0; i < filas.length; i++) {
+    var sel = filas[i].querySelector("select");
+    var cant = parseInt(filas[i].querySelector("input").value) || 0;
+    if (cant > 0) {
+      for (var j = 0; j < SABORES.length; j++) {
+        if (SABORES[j].id === sel.value) { items.push({sabor:sel.value,nombre:SABORES[j].nombre,cantidad:cant,precio:SABORES[j].precio}); break; }
+      }
+    }
+  }
+  if (items.length === 0) { toast("Agrega al menos un producto"); return; }
+  var total = 0;
+  for (var i = 0; i < items.length; i++) total += items[i].cantidad * items[i].precio;
+  var fiado = {cliente:cliente,telefono:telefono,fecha:fecha,items:items,total:total,abonado:0,notas:notas,estado:"pendiente"};
+  if (supabase) {
+    var r = await supabase.from("fiados").insert(fiado).select();
+    if (r.error) { toast("Error: "+r.error.message); return; }
+    if (r.data && r.data[0]) fiado.id = r.data[0].id;
+  } else { fiado.id = Date.now(); }
+  fiados.unshift(fiado);
+  guardarFiadosLocal();
+  cerrarModal();
+  toast("Fiado registrado");
+  pintarFiados();
+}
+
+async function pagarFiado(id) {
+  if (!confirm("Marcar como pagado?")) return;
+  var fiado = null;
+  for (var i = 0; i < fiados.length; i++) { if (fiados[i].id === id) { fiado = fiados[i]; break; } }
+  if (!fiado) return;
+  if (supabase) {
+    var r = await supabase.from("fiados").update({estado:"pagado",abonado:fiado.total}).eq("id",id);
+    if (r.error) { toast("Error: "+r.error.message); return; }
+  }
+  fiado.estado = "pagado"; fiado.abonado = fiado.total;
+  guardarFiadosLocal();
+  toast("Pagado"); pintarFiados();
+}
+
+function abrirModalAbono(id) {
+  var fiado = null;
+  for (var i = 0; i < fiados.length; i++) { if (fiados[i].id === id) { fiado = fiados[i]; break; } }
+  if (!fiado) return;
+  document.getElementById("abono-fiado-id").value = id;
+  document.getElementById("abono-cliente").textContent = fiado.cliente;
+  document.getElementById("abono-monto").value = "";
+  document.getElementById("abono-fecha").value = hoy();
+  document.getElementById("modal-abono").classList.add("open");
+}
+
+async function guardarAbono() {
+  var id = parseInt(document.getElementById("abono-fiado-id").value);
+  var monto = parseInt(document.getElementById("abono-monto").value);
+  var fecha = document.getElementById("abono-fecha").value;
+  if (!monto || monto <= 0) { toast("Monto invalido"); return; }
+  var fiado = null;
+  for (var i = 0; i < fiados.length; i++) { if (fiados[i].id === id) { fiado = fiados[i]; break; } }
+  if (!fiado) return;
+  var nuevoAbonado = (fiado.abonado||0) + monto;
+  var nuevoEstado = nuevoAbonado >= fiado.total ? "pagado" : "pendiente";
+  if (supabase) {
+    var r1 = await supabase.from("abonos").insert({fiado_id:id,monto:monto,fecha:fecha});
+    if (r1.error) { toast("Error: "+r1.error.message); return; }
+    var r2 = await supabase.from("fiados").update({abonado:nuevoAbonado,estado:nuevoEstado}).eq("id",id);
+    if (r2.error) { toast("Error: "+r2.error.message); return; }
+  }
+  fiado.abonado = nuevoAbonado; fiado.estado = nuevoEstado;
+  guardarFiadosLocal();
+  cerrarModalAbono();
+  toast("Abono registrado"); pintarFiados();
+}
+
+async function cancelarFiado(id) {
+  if (!confirm("Cancelar este fiado?")) return;
+  if (supabase) {
+    var r = await supabase.from("fiados").update({estado:"cancelado"}).eq("id",id);
+    if (r.error) { toast("Error: "+r.error.message); return; }
+  }
+  for (var i = 0; i < fiados.length; i++) { if (fiados[i].id === id) { fiados[i].estado = "cancelado"; break; } }
+  guardarFiadosLocal();
+  toast("Cancelado"); pintarFiados();
+}
 
 // ============================
-// PINTAR TODO / NAV
+// NAVEGACION
 // ============================
 function pintarTodo() { pintarVentas(); if (vista==="historial") pintarHistorial(); if (vista==="stats") pintarStats(); if (vista==="fiados") pintarFiados(); }
 
@@ -278,8 +551,8 @@ function ir(v) {
   var secs = ["ventas","historial","stats","fiados","config"];
   for (var i = 0; i < secs.length; i++) {
     var n = secs[i];
-    var e = document.getElementById("v-" + n); if (e) e.style.display = n === v ? "block" : "none";
-    var b = document.getElementById("nb-" + n); if (b) b.className = "nb" + (n === v ? " on" : "");
+    var e = document.getElementById("v-"+n); if (e) e.style.display = n === v ? "block" : "none";
+    var b = document.getElementById("nb-"+n); if (b) b.className = "nb" + (n === v ? " on" : "");
   }
   if (v==="historial") pintarHistorial();
   if (v==="stats") pintarStats();
@@ -287,21 +560,12 @@ function ir(v) {
 }
 
 // ============================
-// TOAST
-// ============================
-var toastT;
-function toast(msg) {
-  var el = document.getElementById("toast");
-  if (!el) return;
-  el.textContent = msg; el.classList.add("on"); clearTimeout(toastT);
-  toastT = setTimeout(function() { el.classList.remove("on"); }, 2000);
-}
-
-// ============================
 // INIT
 // ============================
 cargar();
 pintarVentas();
+initSupabase();
+sincronizar();
 </script>
 
 </body>
