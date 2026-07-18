@@ -385,9 +385,12 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 function initSupabase() {
   try {
-    supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const lib = window.supabase || window.supabaseJs;
+    if (!lib || !lib.createClient) throw new Error("Supabase lib not loaded");
+    supabase = lib.createClient(SUPABASE_URL, SUPABASE_KEY);
     return true;
   } catch(e) {
+    console.warn("Supabase init error:", e);
     supabase = null;
     return false;
   }
