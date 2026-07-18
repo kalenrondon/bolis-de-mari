@@ -405,7 +405,11 @@ function pintarFiados() {
     var debe = f.bolis * 1000;
     var div = document.createElement("div");
     div.className = "frow";
-    div.innerHTML = '<div class="fhead"><div class="fnombre">'+f.cliente+'</div><div class="festado '+(f.estado==="pendiente"?"pendiente":"pagado")+'">'+(f.estado==="pendiente"?"Pendiente":"Pagado")+'</div></div><div class="fdet">'+fechaLinda(f.fecha)+" · "+f.bolis+" bolis</div><div class="fmon"><div class="ftot">'+(f.estado==="pendiente"?cop(debe):cop(0))+'</div></div>'+(f.estado==="pendiente"?'<div class="fbtn"><button class="btn-pagar" onclick="pagarFiado('+f.id+')">✅ Pagar</button></div>':"");
+    var estadoClase = f.estado === "pendiente" ? "pendiente" : "pagado";
+    var estadoLabel = f.estado === "pendiente" ? "Pendiente" : "Pagado";
+    var totalStr = f.estado === "pendiente" ? cop(debe) : cop(0);
+    var btnPagar = f.estado === "pendiente" ? '<div class="fbtn"><button class="btn-pagar" onclick="pagarFiado(' + f.id + ')">✅ Pagar</button></div>' : "";
+    div.innerHTML = '<div class="fhead"><div class="fnombre">' + f.cliente + '</div><div class="festado ' + estadoClase + '">' + estadoLabel + '</div></div><div class="fdet">' + fechaLinda(f.fecha) + ' · ' + f.bolis + ' bolis</div><div class="fmon"><div class="ftot">' + totalStr + '</div></div>' + btnPagar;
     lista.appendChild(div);
   }
 }
