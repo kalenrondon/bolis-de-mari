@@ -113,12 +113,15 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
     <div class="ctit" style="margin:0">📒 Fiados</div>
     <div style="display:flex;gap:4px">
       <button onclick="toggleHistorialFiados()" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);border:none;padding:6px 10px;border-radius:6px;font-weight:700;font-size:11px;cursor:pointer" id="btn-hist-fiados">📜 Historial</button>
-      <button onclick="abrirModalNuevoFiado()" style="background:#FFD93D;color:#000;border:none;padding:6px 12px;border-radius:8px;font-weight:800;font-size:12px;cursor:pointer">+ Nuevo</button>
     </div>
   </div>
   <div class="card res">
     <div class="col"><div class="lbl">Pendiente</div><div class="val" id="f-pendiente" style="color:#FFD93D">$0</div></div>
     <div class="col"><div class="lbl">Activos</div><div class="val" id="f-activos" style="color:#FF9F1C">0</div></div>
+  </div>
+  <div style="display:flex;gap:6px;margin-bottom:8px">
+    <input id="fiado-input" placeholder="Nombre del cliente" style="flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:13px;font-family:Nunito,sans-serif;outline:none">
+    <button onclick="agregarFiado()" style="background:#FFD93D;color:#000;border:none;padding:9px 16px;border-radius:8px;font-weight:800;font-size:13px;cursor:pointer">+ Agregar</button>
   </div>
   <div id="lista-fiados"></div>
 </div>
@@ -134,22 +137,6 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
 </div>
 
 <div class="toast" id="toast"></div>
-
-<!-- Modal Fiado (simplificado) -->
-<div class="modal" id="modal-fiado">
-  <div class="minner">
-    <h3>📒 Nuevo Fiado</h3>
-    <label>Nombre del cliente</label>
-    <input id="fiado-cliente" placeholder="Ej: Maria">
-    <label>Cantidad de bolis</label>
-    <input id="fiado-bolis" type="number" value="1" min="1" oninput="actualizarTotalFiado()">
-    <div style="display:flex;justify-content:space-between;margin-top:10px;font-weight:900;font-size:17px;color:#FFD93D"><span>Total:</span><span id="fiado-total">$0</span></div>
-    <div class="mbtn">
-      <button onclick="cerrarModal()" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.5)">Cancelar</button>
-      <button onclick="guardarFiado()" style="background:#FFD93D;color:#000">Guardar</button>
-    </div>
-  </div>
-</div>
 
 <script>
 "use strict";
@@ -276,7 +263,6 @@ var SK = "bolismari_v5";
 var vista = "ventas";
 var fiados = [];
 var toastT;
-var editandoFiadoId = null;
 var mostrarHistorialFiados = false;
 
 function cargar() {
@@ -424,46 +410,22 @@ function toggleHistorialFiados() {
   pintarFiados();
 }
 
-function abrirModalNuevoFiado() {
-  document.getElementById("fiado-cliente").value = "";
-  document.getElementById("fiado-bolis").value = "1";
-  document.getElementById("fiado-total").textContent = cop(1000);
-  document.getElementById("modal-fiado").classList.add("open");
-}
-
-function cerrarModal() { document.getElementById("modal-fiado").classList.remove("open"); }
-
-function actualizarTotalFiado() {
-  var cant = parseInt(document.getElementById("fiado-bolis").value) || 0;
-  document.getElementById("fiado-total").textContent = cop(cant * 1000);
-}
-
-async function guardarFiado() {
-  var cliente = document.getElementById("fiado-cliente").value.trim();
+function agregarFiado() {
+  var input = document.getElementById("fiado-input");
+  var cliente = input.value.trim();
   if (!cliente) { toast("Ingresa el nombre"); return; }
-  var bolis = parseInt(document.getElementById("fiado-bolis").value) || 1;
-  var fiado = {cliente:cliente,bolis:bolis,fecha:hoy(),estado:"pendiente"};
-  if (supabase) {
-    var r = await supabase.from("fiados").insert(fiado).select();
-    if (r.error) { toast("Error: "+r.error.message); return; }
-    if (r.data && r.data[0]) fiado.id = r.data[0].id;
-  } else { fiado.id = Date.now(); }
+  var fiado = {cliente:cliente,bolis:1,fecha:hoy(),estado:"pendiente",id:Date.now()};
   fiados.unshift(fiado);
   guardarFiadosLocal();
-  cerrarModal();
-  toast("Fiado de "+bolis+" bolis con "+cliente);
+  input.value = "";
+  toast("Fiado: "+cliente);
   pintarFiados();
 }
 
-async function pagarFiado(id) {
-  if (!confirm("Pagar este fiado?")) return;
+function pagarFiado(id) {
   var fiado = null;
   for (var i = 0; i < fiados.length; i++) { if (fiados[i].id === id) { fiado = fiados[i]; break; } }
   if (!fiado) return;
-  if (supabase) {
-    var r = await supabase.from("fiados").update({estado:"pagado"}).eq("id",id);
-    if (r.error) { toast("Error: "+r.error.message); return; }
-  }
   fiado.estado = "pagado";
   guardarFiadosLocal();
   toast(fiado.cliente+" pagado");
