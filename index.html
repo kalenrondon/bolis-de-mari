@@ -4,14 +4,13 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Bolis de Mari 🧊</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Pacifico&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:linear-gradient(160deg,#0a0f1e,#0d1b2a 40%,#112240);min-height:100vh;font-family:Nunito,sans-serif;color:#fff;padding:10px 10px 80px}
+body{background:linear-gradient(160deg,#0a0f1e,#0d1b2a 40%,#112240);min-height:100vh;font-family:'Segoe UI',Arial,sans-serif;color:#fff;padding:10px 10px 80px}
 #hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:6px}
 .logo-img{width:38px;height:38px;border-radius:8px;flex-shrink:0;object-fit:cover}
 .logo-wrap{display:flex;align-items:center;gap:8px}
-.logo-txt{font-family:Pacifico,cursive;color:#FFD93D;font-size:20px}
+.logo-txt{font-family:'Segoe UI',Arial,sans-serif;font-weight:900;color:#FFD93D;font-size:20px}
 .gan-wrap{text-align:right}
 .gan-lbl{font-size:10px;color:rgba(255,255,255,.3)}
 .gan-val{font-weight:900;color:#FFD93D;font-size:18px}
@@ -35,7 +34,7 @@ body{background:linear-gradient(160deg,#0a0f1e,#0d1b2a 40%,#112240);min-height:1
 .val{font-size:20px;font-weight:900}
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#6BCB77;color:#fff;padding:8px 20px;border-radius:20px;font-weight:700;font-size:13px;opacity:0;transition:.3s;pointer-events:none;z-index:999}
 .toast.on{opacity:1}
-button{cursor:pointer;font-family:Nunito,sans-serif}
+button{cursor:pointer;font-family:'Segoe UI',Arial,sans-serif}
 .badge{font-size:10px;color:rgba(255,255,255,.3)}
 /* Fiados */
 .frow{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:10px 12px;margin-bottom:6px}
@@ -70,7 +69,7 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
 
 <div id="hdr">
   <div class="logo-wrap">
-    <img src="logo.png" alt="Logo" class="logo-img">
+    <div class="logo-img" style="background:#FFD93D;color:#0a0f1e;font-size:22px;font-weight:900;display:flex;align-items:center;justify-content:center">🍧</div>
     <div><div class="logo-txt">Bolis de Mari</div></div>
   </div>
   <div class="gan-wrap">
@@ -151,8 +150,6 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" async></script>
-
 <script>
 "use strict";
 // ============================
@@ -183,9 +180,17 @@ var supabase = null;
 var syncing = false;
 
 function initSupabase() {
+  if (supabase) return;
   var lib = window.supabase || window.supabaseJs;
   if (lib && lib.createClient) {
     try { supabase = lib.createClient(SUPABASE_URL, SUPABASE_KEY); console.log("Supabase OK"); actualizarEstadoSupabase(true); sincronizar(); } catch(e) { console.warn("Supabase error:", e); }
+  } else if (!window._supabaseLoading) {
+    window._supabaseLoading = true;
+    var s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js";
+    s.onload = function() { window._supabaseLoading = false; initSupabase(); };
+    s.onerror = function() { window._supabaseLoading = false; setTimeout(initSupabase, 3000); };
+    document.body.appendChild(s);
   } else {
     setTimeout(initSupabase, 500);
   }
