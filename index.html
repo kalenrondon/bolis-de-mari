@@ -499,32 +499,34 @@ async function sincronizar() {
     }
 
     // Sincronizar fiados
-    const { data: fiadosRemote, error: fErr } = await supabase.from("fiados").select("*, abonos(*)").order("id", { ascending: false });
-    if (!fErr && fiadosRemote) {
-      fiados = fiadosRemote.map(f => ({
-        id: f.id,
-        cliente: f.cliente,
-        telefono: f.telefono || "",
-        fecha: f.fecha,
-        items: f.items || [],
-        total: f.total,
-        abonado: f.abonado,
-        notas: f.notas || "",
-        estado: f.estado,
-        created_at: f.created_at
-      }));
-      guardarFiadosLocal();
-    }
+    try {
+      const { data: fiadosRemote, error: fErr } = await supabase.from("fiados").select("*").order("id", { ascending: false });
+      if (!fErr && fiadosRemote) {
+        fiados = fiadosRemote.map(f => ({
+          id: f.id,
+          cliente: f.cliente,
+          telefono: f.telefono || "",
+          fecha: f.fecha,
+          items: f.items || [],
+          total: f.total,
+          abonado: f.abonado,
+          notas: f.notas || "",
+          estado: f.estado,
+          created_at: f.created_at
+        }));
+        guardarFiadosLocal();
+      }
+    } catch(fe) { console.warn("Error sync fiados:", fe); }
 
     badge("✅ Sincronizado", "#6BCB77");
     setTimeout(() => badge("☁️ Supabase activo", "rgba(255,255,255,.35)"), 2500);
-    pintarTodo();
 
   } catch(e) {
     badge("⚠️ Sin conexión", "#FF8787");
     setTimeout(() => badge("💾 Local", "rgba(255,255,255,.35)"), 3000);
   } finally {
     syncing = false;
+    pintarTodo();
   }
 }
 
