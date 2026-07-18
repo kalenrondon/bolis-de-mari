@@ -1,252 +1,29 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bolis de Mari 🧊</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Pacifico&display=swap" rel="stylesheet">
-<style>
-body{background:#0d1b2a;color:#fff;font-family:Nunito,sans-serif;margin:0;padding:10px}
-.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.logo{font-family:Pacifico,cursive;color:#FFD93D;font-size:22px}
-.gan{font-weight:900;color:#FFD93D}
-.nav{display:flex;gap:3px;margin-bottom:8px}
-.nb{flex:1;padding:8px 2px;border-radius:8px;border:none;font-weight:700;font-size:11px;background:rgba(255,255,255,.1);color:#aaa;cursor:pointer}
-.nb.on{background:#FFD93D;color:#000}
-.card{border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px;margin-bottom:8px;background:rgba(255,255,255,.05)}
-.fila{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
-.emoji{font-size:24px;width:30px}
-.nombre{flex:1;font-weight:700;font-size:13px}
-.precio{font-size:11px;color:rgba(255,255,255,.3)}
-.ctrl{display:flex;align-items:center;gap:4px}
-.ctrl button{width:36px;height:36px;border-radius:8px;border:none;font-weight:900;font-size:18px;cursor:pointer}
-.menos{background:rgba(255,100,100,.2);color:#FF8787}
-.mas{background:rgba(107,203,119,.2);color:#6BCB77}
-.cant{width:30px;text-align:center;font-weight:900;font-size:20px;color:#6BCB77}
-.ganancia{font-weight:800;font-size:13px;min-width:55px;text-align:right;color:#FFD93D}
-.col{text-align:center;min-width:75px}
-.col .lbl{font-size:10px;color:rgba(255,255,255,.3)}
-.col .val{font-size:20px;font-weight:900}
-.res{display:flex;justify-content:space-around;flex-wrap:wrap;gap:4px}
-#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#6BCB77;color:#fff;padding:8px 20px;border-radius:20px;font-weight:700;font-size:13px;opacity:0;transition:.3s;pointer-events:none}
-#toast.on{opacity:1}
-#dbg{background:rgba(0,0,0,.9);color:#0f0;font:12px monospace;padding:4px 8px;margin-bottom:8px;border-left:3px solid #f00;max-height:80px;overflow:auto}
-#print{font-size:11px;color:rgba(255,255,255,.3);margin-bottom:8px;padding:4px 8px;background:rgba(0,0,0,.3);border-radius:4px;font-family:monospace;white-space:pre-wrap}
-</style>
-</head>
-<body>
+<body style="background:white;color:black;font-family:sans-serif;padding:20px">
 
-<div id="dbg">⏳ Cargando...</div>
-<div id="print"></div>
-
-<div class="hdr">
-  <div class="logo">🧊 Bolis de Mari</div>
-  <div><div style="font-size:10px;color:rgba(255,255,255,.3)">Ganancia hoy</div><div class="gan" id="ganHoy">$0</div></div>
-</div>
-
-<div class="nav">
-  <button class="nb on" id="nb-ventas" onclick="ir('ventas')">🧊 Ventas</button>
-  <button class="nb" id="nb-historial" onclick="ir('historial')">📅 Historial</button>
-  <button class="nb" id="nb-stats" onclick="ir('stats')">📊 Stats</button>
-  <button class="nb" id="nb-fiados" onclick="ir('fiados')">📒 Fiados</button>
-  <button class="nb" id="nb-config" onclick="ir('config')">⚙️ Config</button>
-</div>
-
-<div id="v-ventas">
-  <div class="card res">
-    <div class="col"><div class="lbl">Vendidos hoy</div><div class="val" style="color:#6BCB77" id="r-total">0</div></div>
-    <div class="col"><div class="lbl">Ganancia</div><div class="val" style="color:#FFD93D" id="r-gan">$0</div></div>
-    <div class="col"><div class="lbl">Prom/dia</div><div class="val" style="color:#4D96FF" id="r-prom">0</div></div>
-    <div class="col"><div class="lbl">Prom $</div><div class="val" style="color:#C77DFF" id="r-promgan">$0</div></div>
-  </div>
-  <div id="lista-sabores"></div>
-</div>
-
-<div id="v-historial" style="display:none">
-  <div style="font-weight:900;margin-bottom:8px">📅 Historial (<span id="ndias">0</span> dias)</div>
-  <div id="lista-hist"></div>
-</div>
-
-<div id="v-stats" style="display:none">
-  <div class="card"><div id="kpis" class="res"></div></div>
-  <div class="card" id="ranking"></div>
-</div>
-
-<div id="v-fiados" style="display:none">
-  <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-    <b>📒 Fiados</b>
-    <button onclick="abrirModalNuevoFiado()" style="background:#FFD93D;color:#000;border:none;padding:6px 12px;border-radius:8px;font-weight:800;font-size:12px;cursor:pointer">+ Nuevo</button>
-  </div>
-  <div class="card res">
-    <div class="col"><div class="lbl">Pendiente</div><div class="val" id="f-pendiente" style="color:#FFD93D">$0</div></div>
-    <div class="col"><div class="lbl">Activos</div><div class="val" id="f-activos" style="color:#FF9F1C">0</div></div>
-  </div>
-  <div id="lista-fiados"></div>
-</div>
-
-<div id="v-config" style="display:none">
-  <b>⚙️ Config</b>
-  <div class="card" style="margin-top:8px;font-size:12px;color:rgba(255,255,255,.5)">
-    App local - tus datos se guardan en este dispositivo
-  </div>
-</div>
-
-<div id="toast"></div>
+<div id="msg">ESPERANDO...</div>
 
 <script>
-// === DEBUG ===
-var DBG = document.getElementById("dbg");
-var P = document.getElementById("print");
-function L(msg) { DBG.innerHTML = "⏳ " + msg; P.textContent += msg + "\n"; }
+"use strict";
+var e = document.getElementById("msg");
+e.textContent = "JS FUNCIONA! " + new Date();
+e.style.color = "green";
+e.style.fontSize = "24px";
+e.style.fontWeight = "bold";
 
-L("Iniciando...");
-
-// === SABORES ===
-var SABORES = [
-  {id:"coco", nombre:"Coco", emoji:"🥥", precio:1000},
-  {id:"pina", nombre:"Pina", emoji:"🍍", precio:1000},
-  {id:"tamarindo", nombre:"Tamarindo", emoji:"🟤", precio:1000},
-  {id:"limon", nombre:"Limon", emoji:"🍋", precio:1000},
-  {id:"corozo", nombre:"Corozo", emoji:"🫐", precio:1000},
-  {id:"galleta", nombre:"Galleta", emoji:"🍪", precio:1000},
-  {id:"bocadillo", nombre:"Bocadillo", emoji:"🟥", precio:1000},
-  {id:"cola", nombre:"Cola", emoji:"🥤", precio:1000},
-  {id:"mango", nombre:"Mango", emoji:"🥭", precio:1000},
-  {id:"guanabana", nombre:"Guanabana", emoji:"💚", precio:1000},
-  {id:"maracuya", nombre:"Maracuya", emoji:"🟡", precio:1000},
-  {id:"hielo", nombre:"Hielo", emoji:"🧊", precio:500},
-  {id:"chocolate", nombre:"Chocolate", emoji:"🍫", precio:1000}
-];
-L("SABORES: " + SABORES.length);
-
-// === STATE ===
-var DB = {};
-var vista = "ventas";
-var fiados = [];
-var fraseI = 0;
-var syncTimer = null;
-var SK = "bolismari_v5";
-
-var FRASES = [
-  "Todo lo puedo en Cristo que me fortalece. — Fil. 4:13",
-  "Dios bendice el trabajo de tus manos hoy.",
-  "El Senor es mi pastor, nada me faltara. — Sal. 23:1",
-  "Cada boli vendido es una bendicion de Dios.",
-  "Confia en el Senor con todo tu corazon. — Prov. 3:5",
-  "Dios ve tu esfuerzo y te recompensara!",
-  "Eres mas que vencedora en Cristo Jesus!",
-  "La alegria del Senor es tu fortaleza. — Neh. 8:10"
-];
-
-// === HELPERS ===
-function hoy() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
-function cop(n) { return "$" + Number(n).toLocaleString("es-CO"); }
-function fechaLinda(k) { if (!k) return ""; var p = k.split("-"); var M = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]; return parseInt(p[2]) + " " + M[parseInt(p[1])-1] + " " + p[0]; }
-
-function cargar() { try { var r = localStorage.getItem(SK); if (r) DB = JSON.parse(r); } catch(e) {} L("Cargados " + Object.keys(DB).length + " dias de datos"); }
-function guardar() { try { localStorage.setItem(SK, JSON.stringify(DB)); } catch(e) {} }
-
-function getDia(k) { var d = DB[k] || {}; var o = {}; for (var i=0; i<SABORES.length; i++) o[SABORES[i].id] = d[SABORES[i].id] || 0; return o; }
-function totales(k) { var d = getDia(k); var b=0,g=0; for (var i=0; i<SABORES.length; i++) { b += d[SABORES[i].id]; g += d[SABORES[i].id] * SABORES[i].precio; } return {bolis:b, ganancia:g}; }
-
-// === VENDER ===
-function vender(id, delta) {
-  L("Vender " + id + " " + delta);
-  var k = hoy();
-  if (!DB[k]) DB[k] = {};
-  DB[k][id] = Math.max(0, (DB[k][id] || 0) + delta);
-  guardar();
-  pintarVentas();
+// Add test buttons
+document.body.innerHTML += "<br><br><b>Sabores:</b><br>";
+var sabores = ["Coco","Piña","Tamarindo","Limón","Corozo","Galleta","Bocadillo","Cola","Mango","Guanábana","Maracuyá","Hielo","Chocolate"];
+for (var i = 0; i < sabores.length; i++) {
+  document.body.innerHTML += '<button style="margin:3px;padding:8px 12px;border-radius:8px;border:1px solid #ccc;background:#f0f0f0;cursor:pointer">' + sabores[i] + '</button>';
 }
 
-// === PINTAR ===
-function pintarVentas() {
-  L("pintarVentas()");
-  var k = hoy();
-  var dia = getDia(k);
-  var t = totales(k);
-
-  var e = document.getElementById("ganHoy"); if (e) e.textContent = cop(t.ganancia);
-  e = document.getElementById("r-total"); if (e) e.textContent = t.bolis;
-  e = document.getElementById("r-gan"); if (e) e.textContent = cop(t.ganancia);
-
-  var dias = Object.keys(DB);
-  if (dias.length) {
-    var tb=0,tg=0;
-    for (var i=0;i<dias.length;i++) { var tt = totales(dias[i]); tb += tt.bolis; tg += tt.ganancia; }
-    e = document.getElementById("r-prom"); if (e) e.textContent = Math.round(tb/dias.length);
-    e = document.getElementById("r-promgan"); if (e) e.textContent = cop(Math.round(tg/dias.length));
-  }
-
-  var lista = document.getElementById("lista-sabores");
-  if (!lista) { L("ERROR: no lista-sabores!"); return; }
-  lista.innerHTML = "";
-  for (var i=0; i<SABORES.length; i++) {
-    var s = SABORES[i];
-    var v = dia[s.id] || 0;
-    var d = document.createElement("div");
-    d.className = "fila";
-    d.innerHTML = '<div class="emoji">' + s.emoji + '</div><div class="nombre">' + s.nombre + '</div><div class="ctrl"><button class="menos" onclick="vender(\'' + s.id + '\',-1)">−</button><div class="cant' + '">' + v + '</div><button class="mas" onclick="vender(\'' + s.id + '\',1)">+</button></div><div class="ganancia">' + cop(v * s.precio) + '</div>';
-    lista.appendChild(d);
-  }
-  L("OK " + SABORES.length + " sabores pintados");
+document.body.innerHTML += "<br><br><b>Navegacion:</b><br>";
+var tabs = ["Ventas","Historial","Stats","Fiados","Config"];
+for (var i = 0; i < tabs.length; i++) {
+  document.body.innerHTML += '<button style="margin:3px;padding:8px 16px;border-radius:8px;border:none;background:#FFD93D;font-weight:bold;cursor:pointer">' + tabs[i] + '</button>';
 }
-
-function pintarHistorial() {
-  L("pintarHistorial()");
-  var dias = Object.keys(DB).sort(function(a,b) { return b.localeCompare(a); });
-  var e = document.getElementById("ndias"); if (e) e.textContent = dias.length;
-  var lista = document.getElementById("lista-hist"); if (!lista) return;
-  lista.innerHTML = "";
-  if (!dias.length) { lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2)'>Sin datos</div>"; return; }
-  for (var i=0;i<dias.length;i++) {
-    var k = dias[i], t = totales(k);
-    var d = document.createElement("div");
-    d.className = "card";
-    d.innerHTML = '<div style="display:flex;justify-content:space-between"><b>' + fechaLinda(k) + '</b> <span style="color:#FFD93D;font-weight:900">' + cop(t.ganancia) + '</span></div><div style="font-size:11px;color:rgba(255,255,255,.3)">' + t.bolis + " bolis</div>";
-    lista.appendChild(d);
-  }
-}
-
-function pintarStats() {
-  L("pintarStats()");
-  var dias = Object.keys(DB).sort();
-  var kpis = document.getElementById("kpis"); if (!kpis) return;
-  if (!dias.length) { kpis.innerHTML = "<div style='color:rgba(255,255,255,.3);padding:20px'>Sin datos</div>"; return; }
-  var nd = dias.length, tg = 0;
-  for (var i=0;i<nd;i++) tg += totales(dias[i]).ganancia;
-  var prom = Math.round(tg/nd);
-  kpis.innerHTML = '<div class="col"><div class="lbl">Total</div><div class="val" style="color:#FFD93D">' + cop(tg) + '</div></div><div class="col"><div class="lbl">Dias</div><div class="val" style="color:#4D96FF">' + nd + '</div></div><div class="col"><div class="lbl">Prom/dia</div><div class="val" style="color:#6BCB77">' + cop(prom) + '</div></div>';
-}
-
-function pintarFiados() { /* TODO */ }
-
-function pintarTodo() { pintarVentas(); if (vista==="historial") pintarHistorial(); if (vista==="stats") pintarStats(); if (vista==="fiados") pintarFiados(); }
-
-// === NAV ===
-function ir(v) {
-  vista = v;
-  var secs = ["ventas","historial","stats","fiados","config"];
-  for (var i=0;i<secs.length;i++) {
-    var e = document.getElementById("v-" + secs[i]); if (e) e.style.display = secs[i] === v ? "block" : "none";
-    var b = document.getElementById("nb-" + secs[i]); if (b) b.className = "nb" + (secs[i] === v ? " on" : "");
-  }
-  if (v==="historial") pintarHistorial();
-  if (v==="stats") pintarStats();
-  if (v==="fiados") pintarFiados();
-  L("Navegar a: " + v);
-}
-
-// === MODAL FIADOS (simplificado) ===
-function abrirModalNuevoFiado() { alert("Funcionalidad de Fiados - proximamente"); }
-
-// === INIT ===
-L("Cargando datos...");
-cargar();
-L("Pintando ventas...");
-pintarVentas();
-L("LISTO!");
-DBG.style.borderLeftColor = "#6BCB77";
 </script>
 
 </body>
