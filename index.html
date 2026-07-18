@@ -153,6 +153,10 @@ button{cursor:pointer;font-family:'Segoe UI',Arial,sans-serif}
 <script>
 "use strict";
 console.log("script start");
+var _dbg = document.createElement("div");
+_dbg.style.cssText = "position:fixed;top:0;left:0;right:0;background:#111;color:#0f0;padding:8px;font-size:11px;z-index:99999;font-family:monospace";
+_dbg.textContent = "JS OK";
+document.body.prepend(_dbg);
 // ============================
 // SABORES (hielo primero)
 // ============================
@@ -483,10 +487,12 @@ function ir(v) {
 try {
   cargar();
   pintarVentas();
+  var _ls = document.getElementById("lista-sabores");
+  _dbg.textContent += " | pintarVentas OK | SABORES="+SABORES.length+" | lista-sabores="+(_ls?"OK("+_ls.children.length+" hijos)":"NULL");
   initSupabase();
   sincronizar();
 } catch(e) {
-  document.body.innerHTML += '<div style="position:fixed;bottom:0;left:0;right:0;background:#c00;color:#fff;padding:10px;font-size:12px;z-index:9999"><b>ERROR:</b> '+e.message+'</div>';
+  document.body.innerHTML += '<div style="position:fixed;bottom:0;left:0;right:0;background:#c00;color:#fff;padding:10px;font-size:12px;z-index:99999"><b>ERROR:</b> '+e.message+'</div>';
 }
 </script>
 
