@@ -432,7 +432,7 @@ function stView(v) {
 }
 
 // ============================
-// FIADOS (simplificado)
+// FIADOS (con +/- para bolis)
 // ============================
 function pintarFiados() {
   var tp = 0, act = 0;
@@ -462,9 +462,12 @@ function pintarFiados() {
     div.className = "frow";
     var estadoClase = f.estado === "pendiente" ? "pendiente" : "pagado";
     var estadoLabel = f.estado === "pendiente" ? "Pendiente" : "Pagado";
-    var totalStr = f.estado === "pendiente" ? cop(debe) : cop(0);
-    var btnPagar = f.estado === "pendiente" ? '<div class="fbtn"><button class="btn-pagar" onclick="pagarFiado(' + f.id + ')">✅ Pagar</button></div>' : "";
-    div.innerHTML = '<div class="fhead"><div class="fnombre">' + f.cliente + '</div><div class="festado ' + estadoClase + '">' + estadoLabel + '</div></div><div class="fdet">' + fechaLinda(f.fecha) + ' · ' + f.bolis + ' bolis</div><div class="fmon"><div class="ftot">' + totalStr + '</div></div>' + btnPagar;
+
+    if (f.estado === "pendiente") {
+      div.innerHTML = '<div class="fhead"><div class="fnombre">' + f.cliente + '</div><div class="festado pendiente">Pendiente</div></div><div class="fmon" style="margin:6px 0"><div style="display:flex;align-items:center;gap:6px"><button class="bm" onclick="cambiarBolis('+f.id+',-1)" style="width:34px;height:34px;border-radius:8px;border:none;font-weight:900;font-size:18px;cursor:pointer;background:rgba(255,100,100,.18);color:#FF8787">−</button><div class="scant" style="min-width:30px;text-align:center;font-weight:900;font-size:20px;color:#6BCB77">'+f.bolis+'</div><button class="bp" onclick="cambiarBolis('+f.id+',1)" style="width:34px;height:34px;border-radius:8px;border:none;font-weight:900;font-size:18px;cursor:pointer;background:rgba(107,203,119,.22);color:#6BCB77">+</button><span style="margin-left:8px;font-weight:900;font-size:16px;color:#FFD93D">'+cop(debe)+'</span></div></div><div class="fbtn"><button class="btn-pagar" onclick="pagarFiado('+f.id+')">✅ Pagar</button></div>';
+    } else {
+      div.innerHTML = '<div class="fhead"><div class="fnombre">' + f.cliente + '</div><div class="festado pagado">Pagado</div></div><div class="fdet">' + fechaLinda(f.fecha) + ' · ' + f.bolis + ' bolis · ' + cop(debe) + '</div>';
+    }
     lista.appendChild(div);
   }
 }
@@ -480,22 +483,35 @@ function agregarFiado() {
   var input = document.getElementById("fiado-input");
   var cliente = input.value.trim();
   if (!cliente) { toast("Ingresa el nombre"); return; }
-  var fiado = {cliente:cliente,bolis:1,fecha:hoy(),estado:"pendiente",id:Date.now()};
+  var fiado = {cliente:cliente,bolis:0,fecha:hoy(),estado:"pendiente",id:Date.now()};
   fiados.unshift(fiado);
   guardarFiadosLocal();
   input.value = "";
-  toast("Fiado: "+cliente);
+  toast("Agregado: "+cliente);
   pintarFiados();
 }
 
+function cambiarBolis(id, delta) {
+  for (var i = 0; i < fiados.length; i++) {
+    if (fiados[i].id === id) {
+      fiados[i].bolis = Math.max(0, fiados[i].bolis + delta);
+      guardarFiadosLocal();
+      pintarFiados();
+      return;
+    }
+  }
+}
+
 function pagarFiado(id) {
-  var fiado = null;
-  for (var i = 0; i < fiados.length; i++) { if (fiados[i].id === id) { fiado = fiados[i]; break; } }
-  if (!fiado) return;
-  fiado.estado = "pagado";
-  guardarFiadosLocal();
-  toast(fiado.cliente+" pagado");
-  pintarFiados();
+  for (var i = 0; i < fiados.length; i++) {
+    if (fiados[i].id === id) {
+      fiados[i].estado = "pagado";
+      guardarFiadosLocal();
+      toast(fiados[i].cliente+" pagado");
+      pintarFiados();
+      return;
+    }
+  }
 }
 
 // ============================
