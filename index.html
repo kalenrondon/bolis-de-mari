@@ -4,9 +4,15 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>Bolis de Mari 🧊</title>
+<meta name="description" content="App de ventas para Bolis de Mari - Control de inventario, fiados y estadísticas">
+<meta name="theme-color" content="#0a1f35">
+<meta property="og:title" content="Bolis de Mari">
+<meta property="og:description" content="App de ventas para Bolis de Mari">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://bolis-de-mari.vercel.app/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Pacifico&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,8 +21,8 @@
 <link rel="apple-touch-icon" href="logo.png">
 <meta name="mobile-web-app-capable" content="yes">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:linear-gradient(160deg,#0a0f1e,#0d1b2a 40%,#112240);min-height:100vh;font-family:Nunito,sans-serif;color:#fff;padding:10px 10px 80px;touch-action:manipulation}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(160deg,#0a0f1e,#0d1b2a 40%,#112240);min-height:100vh;min-height:100dvh;font-family:Nunito,sans-serif;color:#fff;padding:10px 10px 80px;touch-action:manipulation;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 #hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:6px}
 .logo-img{width:38px;height:38px;border-radius:8px;flex-shrink:0;object-fit:cover}
 .logo-wrap{display:flex;align-items:center;gap:8px}
@@ -24,8 +30,8 @@ body{background:linear-gradient(160deg,#0a0f1e,#0d1b2a 40%,#112240);min-height:1
 .gan-wrap{text-align:right}
 .gan-lbl{font-size:10px;color:rgba(255,255,255,.3)}
 .gan-val{font-weight:900;color:#FFD93D;font-size:18px}
-.nav{display:flex;gap:4px;margin-bottom:8px}
-.nb{flex:1;padding:8px 0;border-radius:8px;border:none;font-weight:700;font-size:11px;text-align:center;background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);cursor:pointer}
+.nav{display:flex;gap:4px;margin-bottom:8px;position:sticky;top:0;z-index:10;background:#0a0f1e;padding:4px 0}
+.nb{flex:1;padding:10px 0;border-radius:8px;border:none;font-weight:700;font-size:11px;text-align:center;background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);cursor:pointer;min-height:44px}
 .nb.on{background:#FFD93D;color:#0a0f1e}
 .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px;margin-bottom:8px}
 .ctit{font-size:13px;font-weight:800;color:rgba(255,255,255,.6);margin-bottom:8px}
@@ -33,18 +39,18 @@ body{background:linear-gradient(160deg,#0a0f1e,#0d1b2a 40%,#112240);min-height:1
 .emoji{font-size:24px;width:32px;text-align:center;flex-shrink:0}
 .snombre{flex:1;font-weight:700;font-size:13px}
 .sctrl{display:flex;align-items:center;gap:4px;flex-shrink:0}
-.sctrl button{width:38px;height:38px;border-radius:8px;border:none;font-weight:900;font-size:20px;cursor:pointer}
+.sctrl button{width:44px;height:44px;border-radius:10px;border:none;font-weight:900;font-size:20px;cursor:pointer}
 .bm{background:rgba(255,100,100,.18);color:#FF8787}
 .bp{background:rgba(107,203,119,.22);color:#6BCB77}
-.scant{width:32px;text-align:center;font-weight:900;font-size:22px;color:#6BCB77}
+.scant{width:36px;text-align:center;font-weight:900;font-size:22px;color:#6BCB77}
 .sgan{font-weight:800;font-size:13px;color:#FFD93D;min-width:55px;text-align:right}
 .res{display:flex;justify-content:space-around;flex-wrap:wrap;gap:6px}
-.col{text-align:center;min-width:70px}
+.col{text-align:center;min-width:70px;flex:1}
 .lbl{font-size:10px;color:rgba(255,255,255,.3)}
 .val{font-size:20px;font-weight:900}
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#6BCB77;color:#fff;padding:8px 20px;border-radius:20px;font-weight:700;font-size:13px;opacity:0;transition:.3s;pointer-events:none;z-index:999}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#6BCB77;color:#fff;padding:8px 20px;border-radius:20px;font-weight:700;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
 .toast.on{opacity:1}
-button{cursor:pointer;font-family:Nunito,sans-serif;touch-action:manipulation}
+button{cursor:pointer;font-family:Nunito,sans-serif}
 .badge{font-size:10px;color:rgba(255,255,255,.3)}
 /* Fiados - Boli Design */
 .boli{display:flex;flex-direction:column;align-items:center;margin-bottom:10px}
@@ -55,7 +61,7 @@ button{cursor:pointer;font-family:Nunito,sans-serif;touch-action:manipulation}
 .boli-name{font-weight:800;font-size:13px;text-align:center;margin-bottom:4px}
 .boli-row{display:flex;align-items:center;justify-content:space-between;gap:4px}
 .boli-ctrl{display:flex;align-items:center;gap:4px}
-.boli-ctrl button{width:34px;height:34px;border-radius:50%;border:none;font-weight:900;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.boli-ctrl button{width:44px;height:44px;border-radius:50%;border:none;font-weight:900;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .boli-qty{min-width:28px;text-align:center;font-weight:900;font-size:18px;color:#6BCB77}
 .boli-total{font-weight:900;font-size:16px;color:#FFD93D;min-width:60px;text-align:right}
 .boli-badge{font-size:9px;padding:2px 8px;border-radius:20px;font-weight:700;display:inline-block;margin-left:auto}
@@ -113,7 +119,7 @@ button{cursor:pointer;font-family:Nunito,sans-serif;touch-action:manipulation}
 
 <div id="v-historial" style="display:none">
   <div class="ctit">📅 Historial (<span id="ndias">0</span> dias)</div>
-  <input id="hist-search" placeholder="Buscar fecha (ej: Mar 2026)" oninput="pintarHistorial()" style="width:100%;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:13px;font-family:Nunito,sans-serif;outline:none;margin-bottom:8px">
+  <input id="hist-search" placeholder="Buscar fecha (ej: Mar 2026)" oninput="debounceHistorial()" style="width:100%;padding:12px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:14px;font-family:Nunito,sans-serif;outline:none;margin-bottom:8px">
   <div id="lista-hist"></div>
 </div>
 
@@ -397,7 +403,7 @@ function actualizarEstadoSupabase(conectado) {
 
 async function sincronizar() {
   if (!supabase || syncing) return;
-  syncing = true;
+  syncing = true; loading(true);
   try {
     var dias = Object.keys(DB);
     for (var i = 0; i < dias.length; i++) {
@@ -439,8 +445,8 @@ async function sincronizar() {
         if (vista === "fiados") pintarFiados();
       }
     } catch(fe) { console.warn("fiados sync:", fe); }
-  } catch(e) { console.warn("sync error:", e); }
-  finally { syncing = false; }
+  }   catch(e) { console.warn("sync error:", e); }
+  finally { syncing = false; loading(false); }
 }
 
 function programarSync() {
@@ -471,13 +477,14 @@ var vista = "ventas";
 var fiados = [];
 var toastT;
 var mostrarHistorialFiados = false;
+var debounceT;
 
 function cargar() {
-  try { var r = localStorage.getItem(SK); if (r) DB = JSON.parse(r); } catch(e) {}
-  try { var f = localStorage.getItem("bolismari_fiados"); if (f) fiados = JSON.parse(f); } catch(e) {}
+  try { var r = localStorage.getItem(SK); if (r) DB = JSON.parse(r); } catch(e) { console.warn("cargar DB:", e); }
+  try { var f = localStorage.getItem("bolismari_fiados"); if (f) fiados = JSON.parse(f); } catch(e) { console.warn("cargar fiados:", e); }
 }
-function guardar() { try { localStorage.setItem(SK, JSON.stringify(DB)); } catch(e) {} }
-function guardarFiadosLocal() { try { localStorage.setItem("bolismari_fiados", JSON.stringify(fiados)); } catch(e) {} }
+function guardar() { try { localStorage.setItem(SK, JSON.stringify(DB)); } catch(e) { toast("Error al guardar"); } }
+function guardarFiadosLocal() { try { localStorage.setItem("bolismari_fiados", JSON.stringify(fiados)); } catch(e) { toast("Error al guardar fiados"); } }
 
 function hoy() { var d = new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
 function cop(n) { return "$"+Number(n).toLocaleString("es-CO"); }
@@ -493,24 +500,40 @@ function toast(msg) {
   toastT = setTimeout(function() { el.classList.remove("on"); }, 2000);
 }
 
+function debounceHistorial() { clearTimeout(debounceT); debounceT = setTimeout(pintarHistorial, 200); }
+
+function loading(show) {
+  var el = document.getElementById("loading");
+  if (!el) {
+    if (!show) return;
+    el = document.createElement("div");
+    el.id = "loading";
+    el.style.cssText = "position:fixed;top:10px;right:10px;z-index:9999;background:rgba(77,150,255,.2);border:1px solid rgba(77,150,255,.4);color:#4D96FF;padding:4px 10px;border-radius:6px;font-size:10px;font-weight:700";
+    el.textContent = "Sincronizando...";
+    document.body.appendChild(el);
+  }
+  el.style.display = show ? "block" : "none";
+}
+
+var _ac = null;
 function beep() {
   try {
-    var ac = new (window.AudioContext || window.webkitAudioContext)();
-    var o = ac.createOscillator();
-    var g = ac.createGain();
-    o.connect(g); g.connect(ac.destination);
+    if (!_ac) _ac = new (window.AudioContext || window.webkitAudioContext)();
+    var o = _ac.createOscillator();
+    var g = _ac.createGain();
+    o.connect(g); g.connect(_ac.destination);
     o.frequency.value = 800; o.type = "sine";
-    g.gain.setValueAtTime(0.1, ac.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.1);
-    o.start(ac.currentTime); o.stop(ac.currentTime + 0.1);
-    setTimeout(function() { ac.close(); }, 200);
+    g.gain.setValueAtTime(0.1, _ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, _ac.currentTime + 0.1);
+    o.start(_ac.currentTime); o.stop(_ac.currentTime + 0.1);
   } catch(e) {}
 }
 
 function mostrarVersiculo() {
   var el = document.getElementById("biblia");
   if (!el) return;
-  el.textContent = VERSICULOS[Math.floor(Math.random() * VERSICULOS.length)];
+  el.textContent = VERSICULOS[Math.floor(Math.random() * VERSICULOS.length)].substring(0, 120);
+  el.title = el.textContent;
 }
 
 // ============================
@@ -541,11 +564,13 @@ function pintarVentas() {
     e = document.getElementById("r-prom"); if (e) e.textContent = Math.round(tb/dias.length);
     e = document.getElementById("r-promgan"); if (e) e.textContent = cop(Math.round(tg/dias.length));
   }
-  // Resumen semanal
+  // Resumen semanal (semana empieza lunes)
   var semEl = document.getElementById("semanal");
   if (semEl) {
     var ahora = new Date();
-    var inicioSem = new Date(ahora); inicioSem.setDate(ahora.getDate() - ahora.getDay()); // domingo
+    var diaSem = ahora.getDay(); // 0=domingo
+    var diffLunes = diaSem === 0 ? 6 : diaSem - 1;
+    var inicioSem = new Date(ahora); inicioSem.setDate(ahora.getDate() - diffLunes);
     var inicioSemPasada = new Date(inicioSem); inicioSemPasada.setDate(inicioSem.getDate() - 7);
     var swB = 0, swG = 0, spB = 0, spG = 0;
     for (var i = 0; i < dias.length; i++) {
@@ -738,7 +763,7 @@ function pintarFiados() {
   var mostrar = mostrarHistorialFiados ? pagados : pendientes;
 
   if (mostrar.length === 0) {
-    lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2);padding:30px'>" + (mostrarHistorialFiados ? "No hay historial" : "Sin fiados pendientes") + "</div>";
+    lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2);padding:40px 20px;font-size:13px'>" + (mostrarHistorialFiados ? "📜 No hay historial de fiados aun" : "✅ No hay fiados pendientes") + "</div>";
     return;
   }
 
@@ -774,9 +799,11 @@ function exportarDatos() {
   toast("✅ Datos exportados");
 }
 
+function sanitize(t) { return t.replace(/[<>&"']/g,function(c){return{"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;","'":"&#39;"}[c];}).trim().substring(0,60); }
+
 function agregarFiado() {
   var input = document.getElementById("fiado-input");
-  var cliente = input.value.trim().replace(/<[^>]*>/g, "").substring(0, 60);
+  var cliente = sanitize(input.value);
   if (!cliente) { toast("Ingresa el nombre"); return; }
   var fiado = {cliente:cliente,bolis:0,fecha:hoy(),estado:"pendiente",id:Date.now()};
   fiados.unshift(fiado);
