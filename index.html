@@ -46,22 +46,24 @@ body{background:linear-gradient(160deg,#0a0f1e,#0d1b2a 40%,#112240);min-height:1
 .toast.on{opacity:1}
 button{cursor:pointer;font-family:Nunito,sans-serif}
 .badge{font-size:10px;color:rgba(255,255,255,.3)}
-/* Fiados */
-.frow{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:10px 12px;margin-bottom:6px}
-.fhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-.fnombre{font-weight:800;font-size:13px}
-.festado{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700}
-.festado.pendiente{background:rgba(255,217,61,.15);color:#FFD93D}
-.festado.pagado{background:rgba(107,203,119,.15);color:#6BCB77}
-.fdet{font-size:11px;color:rgba(255,255,255,.4);margin-bottom:4px}
-.fmon{display:flex;justify-content:space-between;align-items:center}
-.ftot{font-weight:900;font-size:16px;color:#FFD93D}
-.fabono{font-size:11px;color:rgba(255,255,255,.3)}
-.fbtn{margin-top:6px;display:flex;gap:4px}
-.fbtn button{padding:5px 10px;border-radius:6px;border:none;font-weight:700;font-size:11px;cursor:pointer}
-.btn-abonar{background:rgba(77,150,255,.2);border:1px solid rgba(77,150,255,.4);color:#4D96FF}
-.btn-pagar{background:rgba(107,203,119,.2);border:1px solid rgba(107,203,119,.4);color:#6BCB77}
-.btn-cancel{background:rgba(255,100,100,.15);border:1px solid rgba(255,100,100,.3);color:#FF8787}
+/* Fiados - Boli Design */
+.boli{display:flex;flex-direction:column;align-items:center;margin-bottom:10px}
+.boli-body{background:linear-gradient(180deg,rgba(255,217,61,.12) 0%,rgba(107,203,119,.08) 100%);border:1px solid rgba(255,255,255,.1);border-radius:16px 16px 4px 4px;padding:8px 8px 6px;width:100%;position:relative}
+.boli-stick{width:12px;height:14px;background:rgba(255,255,255,.12);border-radius:0 0 6px 6px;border:1px solid rgba(255,255,255,.08);border-top:none}
+.boli-pagado .boli-body{background:linear-gradient(180deg,rgba(107,203,119,.18) 0%,rgba(107,203,119,.06) 100%);border-color:rgba(107,203,119,.25)}
+.boli-pagado .boli-stick{background:rgba(107,203,119,.15);border-color:rgba(107,203,119,.2)}
+.boli-name{font-weight:800;font-size:13px;text-align:center;margin-bottom:4px}
+.boli-row{display:flex;align-items:center;justify-content:space-between;gap:4px}
+.boli-ctrl{display:flex;align-items:center;gap:4px}
+.boli-ctrl button{width:34px;height:34px;border-radius:50%;border:none;font-weight:900;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.boli-qty{min-width:28px;text-align:center;font-weight:900;font-size:18px;color:#6BCB77}
+.boli-total{font-weight:900;font-size:16px;color:#FFD93D;min-width:60px;text-align:right}
+.boli-badge{font-size:9px;padding:2px 8px;border-radius:20px;font-weight:700;display:inline-block;margin-left:auto}
+.boli-badge.pendiente{background:rgba(255,217,61,.15);color:#FFD93D}
+.boli-badge.pagado{background:rgba(107,203,119,.15);color:#6BCB77}
+.boli-actions{display:flex;justify-content:center;gap:6px;margin-top:6px}
+.boli-actions button{padding:4px 10px;border-radius:6px;border:none;font-weight:700;font-size:10px;cursor:pointer}
+.boli-date{font-size:10px;color:rgba(255,255,255,.3);text-align:center;margin-top:2px}
 /* Modal */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
 .modal.open{display:flex}
@@ -589,14 +591,12 @@ function pintarFiados() {
     var f = mostrar[i];
     var debe = f.bolis * PRECIO_BOLI;
     var div = document.createElement("div");
-    div.className = "frow";
+    div.className = "boli" + (f.estado === "pagado" ? " boli-pagado" : "");
 
     if (f.estado === "pendiente") {
-      div.innerHTML = '<div class="fhead"><div class="fnombre">' + f.cliente + '</div><div class="festado pendiente">Pendiente</div></div><div class="fmon" style="margin:6px 0"><div style="display:flex;align-items:center;gap:6px"><button class="bm" onclick="cambiarBolis('+f.id+',-1)" style="width:34px;height:34px;border-radius:8px;border:none;font-weight:900;font-size:18px;cursor:pointer;background:rgba(255,100,100,.18);color:#FF8787">−</button><div class="scant" style="min-width:30px;text-align:center;font-weight:900;font-size:20px;color:#6BCB77">'+f.bolis+'</div><button class="bp" onclick="cambiarBolis('+f.id+',1)" style="width:34px;height:34px;border-radius:8px;border:none;font-weight:900;font-size:18px;cursor:pointer;background:rgba(107,203,119,.22);color:#6BCB77">+</button><span style="margin-left:8px;font-weight:900;font-size:16px;color:#FFD93D">'+cop(debe)+'</span></div></div><div class="fbtn"><button class="btn-pagar" onclick="pagarFiado('+f.id+')">✅ Pagar</button><button class="btn-cancel" onclick="eliminarFiado('+f.id+')">🗑️</button></div>';
+      div.innerHTML = '<div class="boli-body"><div class="boli-name">' + f.cliente + ' <span class="boli-badge pendiente">Pendiente</span></div><div class="boli-row"><div class="boli-ctrl"><button onclick="cambiarBolis('+f.id+',-1)" style="background:rgba(255,100,100,.2);color:#FF8787">−</button><div class="boli-qty">'+f.bolis+'</div><button onclick="cambiarBolis('+f.id+',1)" style="background:rgba(107,203,119,.25);color:#6BCB77">+</button></div><div class="boli-total">'+cop(debe)+'</div></div><div class="boli-actions"><button onclick="pagarFiado('+f.id+')" style="background:rgba(107,203,119,.2);border:1px solid rgba(107,203,119,.35);color:#6BCB77">✅ Pagar</button><button onclick="eliminarFiado('+f.id+')" style="background:rgba(255,100,100,.15);border:1px solid rgba(255,100,100,.3);color:#FF8787">🗑️ Eliminar</button></div></div><div class="boli-stick"></div>';
     } else {
-      div.innerHTML = '<div class="fhead"><div class="fnombre">' + f.cliente + '</div><div class="festado pagado" style="background:rgba(107,203,119,.2);color:#6BCB77">✅ Pagado</div></div><div class="fdet" style="color:rgba(255,255,255,.35)">' + fechaLinda(f.fecha) + ' · ' + f.bolis + ' bolis · <span style="color:rgba(107,203,119,.5);font-weight:700">' + cop(debe) + '</span></div>';
-      div.style.border = "1px solid rgba(107,203,119,.15)";
-      div.style.background = "rgba(107,203,119,.06)";
+      div.innerHTML = '<div class="boli-body"><div class="boli-name">' + f.cliente + ' <span class="boli-badge pagado">✅ Pagado</span></div><div class="boli-row"><div class="boli-qty" style="color:rgba(255,255,255,.4)">'+f.bolis+' bolis</div><div class="boli-total" style="color:rgba(107,203,119,.6)">'+cop(debe)+'</div></div><div class="boli-date">'+fechaLinda(f.fecha)+'</div></div><div class="boli-stick"></div>';
     }
     lista.appendChild(div);
   }
