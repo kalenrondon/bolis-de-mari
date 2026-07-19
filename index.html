@@ -22,65 +22,65 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:linear-gradient(160deg,#0a0f1e,#0d1b2a 40%,#112240);min-height:100vh;min-height:100dvh;font-family:Nunito,sans-serif;color:#fff;padding:10px 10px 80px;touch-action:manipulation;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-#hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:6px}
-.logo-img{width:38px;height:38px;border-radius:8px;flex-shrink:0;object-fit:cover}
-.logo-wrap{display:flex;align-items:center;gap:8px}
-.logo-txt{font-family:Pacifico,cursive;color:#FFD93D;font-size:20px}
+body{background:linear-gradient(160deg,#0a0f1e,#0d1b2a 40%,#112240);min-height:100vh;min-height:100dvh;font-family:Nunito,sans-serif;color:#fff;padding:12px 12px 80px;touch-action:manipulation;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-size:16px}
+#hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:8px}
+.logo-img{width:44px;height:44px;border-radius:10px;flex-shrink:0;object-fit:cover}
+.logo-wrap{display:flex;align-items:center;gap:10px}
+.logo-txt{font-family:Pacifico,cursive;color:#FFD93D;font-size:22px}
 .gan-wrap{text-align:right}
-.gan-lbl{font-size:10px;color:rgba(255,255,255,.3)}
-.gan-val{font-weight:900;color:#FFD93D;font-size:18px}
-.nav{display:flex;gap:4px;margin-bottom:8px;position:sticky;top:0;z-index:10;background:#0a0f1e;padding:4px 0}
-.nb{flex:1;padding:10px 0;border-radius:8px;border:none;font-weight:700;font-size:11px;text-align:center;background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);cursor:pointer;min-height:44px}
+.gan-lbl{font-size:12px;color:rgba(255,255,255,.3)}
+.gan-val{font-weight:900;color:#FFD93D;font-size:22px}
+.nav{display:flex;gap:4px;margin-bottom:10px;position:sticky;top:0;z-index:10;background:#0a0f1e;padding:4px 0}
+.nb{flex:1;padding:10px 0;border-radius:8px;border:none;font-weight:700;font-size:13px;text-align:center;background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);cursor:pointer;min-height:48px}
 .nb.on{background:#FFD93D;color:#0a0f1e}
-.card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px;margin-bottom:8px}
-.ctit{font-size:13px;font-weight:800;color:rgba(255,255,255,.6);margin-bottom:8px}
-.fila{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
-.emoji{font-size:24px;width:32px;text-align:center;flex-shrink:0}
-.snombre{flex:1;font-weight:700;font-size:13px}
-.sctrl{display:flex;align-items:center;gap:4px;flex-shrink:0}
-.sctrl button{width:44px;height:44px;border-radius:10px;border:none;font-weight:900;font-size:20px;cursor:pointer}
+.card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px;margin-bottom:10px}
+.ctit{font-size:15px;font-weight:800;color:rgba(255,255,255,.6);margin-bottom:10px}
+.fila{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.emoji{font-size:28px;width:36px;text-align:center;flex-shrink:0}
+.snombre{flex:1;font-weight:700;font-size:15px}
+.sctrl{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.sctrl button{width:48px;height:48px;border-radius:12px;border:none;font-weight:900;font-size:22px;cursor:pointer}
 .bm{background:rgba(255,100,100,.18);color:#FF8787}
 .bp{background:rgba(107,203,119,.22);color:#6BCB77}
-.scant{width:36px;text-align:center;font-weight:900;font-size:22px;color:#6BCB77}
-.sgan{font-weight:800;font-size:13px;color:#FFD93D;min-width:55px;text-align:right}
-.res{display:flex;justify-content:space-around;flex-wrap:wrap;gap:6px}
-.col{text-align:center;min-width:70px;flex:1}
-.lbl{font-size:10px;color:rgba(255,255,255,.3)}
-.val{font-size:20px;font-weight:900}
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#6BCB77;color:#fff;padding:8px 20px;border-radius:20px;font-weight:700;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+.scant{width:40px;text-align:center;font-weight:900;font-size:24px;color:#6BCB77}
+.sgan{font-weight:800;font-size:15px;color:#FFD93D;min-width:60px;text-align:right}
+.res{display:flex;justify-content:space-around;flex-wrap:wrap;gap:8px}
+.col{text-align:center;min-width:80px;flex:1}
+.lbl{font-size:12px;color:rgba(255,255,255,.3)}
+.val{font-size:22px;font-weight:900}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#6BCB77;color:#fff;padding:10px 24px;border-radius:24px;font-weight:700;font-size:15px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
 .toast.on{opacity:1}
 button{cursor:pointer;font-family:Nunito,sans-serif}
-.badge{font-size:10px;color:rgba(255,255,255,.3)}
+.badge{font-size:12px;color:rgba(255,255,255,.3)}
 /* Fiados - Boli Design */
-.boli{display:flex;flex-direction:column;align-items:center;margin-bottom:10px}
-.boli-body{background:linear-gradient(180deg,rgba(255,217,61,.12) 0%,rgba(107,203,119,.08) 100%);border:1px solid rgba(255,255,255,.1);border-radius:16px 16px 4px 4px;padding:8px 8px 6px;width:100%;position:relative}
-.boli-stick{width:12px;height:14px;background:rgba(255,255,255,.12);border-radius:0 0 6px 6px;border:1px solid rgba(255,255,255,.08);border-top:none}
+.boli{display:flex;flex-direction:column;align-items:center;margin-bottom:12px}
+.boli-body{background:linear-gradient(180deg,rgba(255,217,61,.12) 0%,rgba(107,203,119,.08) 100%);border:1px solid rgba(255,255,255,.1);border-radius:18px 18px 4px 4px;padding:10px 10px 8px;width:100%;position:relative}
+.boli-stick{width:14px;height:18px;background:rgba(255,255,255,.12);border-radius:0 0 8px 8px;border:1px solid rgba(255,255,255,.08);border-top:none}
 .boli-pagado .boli-body{background:linear-gradient(180deg,rgba(107,203,119,.18) 0%,rgba(107,203,119,.06) 100%);border-color:rgba(107,203,119,.25)}
 .boli-pagado .boli-stick{background:rgba(107,203,119,.15);border-color:rgba(107,203,119,.2)}
-.boli-name{font-weight:800;font-size:13px;text-align:center;margin-bottom:4px}
-.boli-row{display:flex;align-items:center;justify-content:space-between;gap:4px}
-.boli-ctrl{display:flex;align-items:center;gap:4px}
-.boli-ctrl button{width:44px;height:44px;border-radius:50%;border:none;font-weight:900;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.boli-qty{min-width:28px;text-align:center;font-weight:900;font-size:18px;color:#6BCB77}
-.boli-total{font-weight:900;font-size:16px;color:#FFD93D;min-width:60px;text-align:right}
-.boli-badge{font-size:9px;padding:2px 8px;border-radius:20px;font-weight:700;display:inline-block;margin-left:auto}
+.boli-name{font-weight:800;font-size:15px;text-align:center;margin-bottom:6px}
+.boli-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.boli-ctrl{display:flex;align-items:center;gap:6px}
+.boli-ctrl button{width:46px;height:46px;border-radius:50%;border:none;font-weight:900;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.boli-qty{min-width:32px;text-align:center;font-weight:900;font-size:20px;color:#6BCB77}
+.boli-total{font-weight:900;font-size:18px;color:#FFD93D;min-width:65px;text-align:right}
+.boli-badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;display:inline-block;margin-left:auto}
 .boli-badge.pendiente{background:rgba(255,217,61,.15);color:#FFD93D}
 .boli-badge.pagado{background:rgba(107,203,119,.15);color:#6BCB77}
-.boli-actions{display:flex;justify-content:center;gap:6px;margin-top:6px}
-.boli-actions button{padding:4px 10px;border-radius:6px;border:none;font-weight:700;font-size:10px;cursor:pointer}
-.boli-date{font-size:10px;color:rgba(255,255,255,.3);text-align:center;margin-top:2px}
+.boli-actions{display:flex;justify-content:center;gap:8px;margin-top:8px}
+.boli-actions button{padding:6px 14px;border-radius:8px;border:none;font-weight:700;font-size:13px;cursor:pointer}
+.boli-date{font-size:12px;color:rgba(255,255,255,.3);text-align:center;margin-top:3px}
 /* Modal */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
 .modal.open{display:flex}
-.minner{background:#0d1b2a;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:20px;width:100%;max-width:400px;max-height:90vh;overflow:auto}
-.minner h3{font-size:15px;margin-bottom:12px}
-.minner label{font-size:11px;color:rgba(255,255,255,.4);display:block;margin:8px 0 3px}
-.minner input,.minner select{width:100%;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:13px;font-family:Nunito,sans-serif;outline:none}
+.minner{background:#0d1b2a;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:24px;width:100%;max-width:420px;max-height:90vh;overflow:auto}
+.minner h3{font-size:17px;margin-bottom:14px}
+.minner label{font-size:13px;color:rgba(255,255,255,.4);display:block;margin:10px 0 4px}
+.minner input,.minner select{width:100%;padding:12px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:15px;font-family:Nunito,sans-serif;outline:none}
 .minner input:focus{border-color:#4D96FF}
-.mbtn{display:flex;gap:8px;margin-top:14px}
-.mbtn button{flex:1;padding:10px;border-radius:8px;border:none;font-weight:800;font-size:12px;cursor:pointer}
-@media(max-width:400px){.logo-txt{font-size:17px}.val{font-size:17px}}
+.mbtn{display:flex;gap:10px;margin-top:16px}
+.mbtn button{flex:1;padding:12px;border-radius:10px;border:none;font-weight:800;font-size:14px;cursor:pointer}
+@media(max-width:400px){.logo-txt{font-size:18px}.val{font-size:19px}.nb{font-size:11px}}
 </style>
 </head>
 <body>
@@ -96,7 +96,7 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
   </div>
 </div>
 <div class="badge" id="badge">💾 Local</div>
-<div id="biblia" style="padding:8px 8px 6px;margin-bottom:6px;text-align:center;font-size:12px;color:rgba(255,217,61,.8);font-style:italic;line-height:1.4;background:rgba(255,217,61,.08);border:1px solid rgba(255,217,61,.15);border-radius:10px;font-weight:600"></div>
+<div id="biblia" style="padding:10px 10px 8px;margin-bottom:8px;text-align:center;font-size:14px;color:rgba(255,217,61,.85);font-style:italic;line-height:1.5;background:rgba(255,217,61,.08);border:1px solid rgba(255,217,61,.15);border-radius:12px;font-weight:600"></div>
 
 <div class="nav">
   <button class="nb on" id="nb-ventas" onclick="ir('ventas')" title="Ventas del día">🧊 Ventas</button>
@@ -107,7 +107,7 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
 </div>
 
 <div id="v-ventas">
-  <div id="semanal" style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:4px"></div>
+  <div id="semanal" style="font-size:12px;color:rgba(255,255,255,.35);margin-bottom:6px"></div>
   <div class="card res" id="resumen">
     <div class="col"><div class="lbl">Vendidos</div><div class="val" style="color:#6BCB77" id="r-total">0</div></div>
     <div class="col"><div class="lbl">Ganancia</div><div class="val" style="color:#FFD93D" id="r-gan">$0</div></div>
@@ -119,15 +119,15 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
 
 <div id="v-historial" style="display:none">
   <div class="ctit">📅 Historial (<span id="ndias">0</span> dias)</div>
-  <input id="hist-search" placeholder="Buscar fecha (ej: Mar 2026)" oninput="debounceHistorial()" style="width:100%;padding:12px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:14px;font-family:Nunito,sans-serif;outline:none;margin-bottom:8px">
+  <input id="hist-search" placeholder="Buscar fecha (ej: Mar 2026)" oninput="debounceHistorial()" style="width:100%;padding:12px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:15px;font-family:Nunito,sans-serif;outline:none;margin-bottom:10px">
   <div id="lista-hist"></div>
 </div>
 
 <div id="v-stats" style="display:none">
   <div style="display:flex;gap:4px;margin-bottom:8px">
-    <button class="nb on" id="st-res" onclick="stView('res')" style="flex:1;padding:7px 0;border-radius:6px;border:none;font-weight:700;font-size:11px;text-align:center;cursor:pointer;background:#FFD93D;color:#0a0f1e">📊 Resumen</button>
-    <button class="nb" id="st-mes" onclick="stView('mes')" style="flex:1;padding:7px 0;border-radius:6px;border:none;font-weight:700;font-size:11px;text-align:center;cursor:pointer;background:rgba(255,255,255,.07);color:rgba(255,255,255,.5)">📅 Por Mes</button>
-    <button class="nb" id="st-sab" onclick="stView('sab')" style="flex:1;padding:7px 0;border-radius:6px;border:none;font-weight:700;font-size:11px;text-align:center;cursor:pointer;background:rgba(255,255,255,.07);color:rgba(255,255,255,.5)">🏆 Por Sabor</button>
+    <button class="nb on" id="st-res" onclick="stView('res')" style="flex:1;padding:9px 0;border-radius:8px;border:none;font-weight:700;font-size:13px;text-align:center;cursor:pointer;background:#FFD93D;color:#0a0f1e">📊 Resumen</button>
+    <button class="nb" id="st-mes" onclick="stView('mes')" style="flex:1;padding:9px 0;border-radius:8px;border:none;font-weight:700;font-size:13px;text-align:center;cursor:pointer;background:rgba(255,255,255,.07);color:rgba(255,255,255,.5)">📅 Por Mes</button>
+    <button class="nb" id="st-sab" onclick="stView('sab')" style="flex:1;padding:9px 0;border-radius:8px;border:none;font-weight:700;font-size:13px;text-align:center;cursor:pointer;background:rgba(255,255,255,.07);color:rgba(255,255,255,.5)">🏆 Por Sabor</button>
   </div>
   <div id="st-resumen" class="card"><div class="ctit">📊 Resumen General</div><div id="kpis" style="display:flex;justify-content:space-around;flex-wrap:wrap;gap:6px"></div></div>
   <div id="st-meses" style="display:none"><div class="ctit">📅 Ventas por Mes</div><div id="lista-meses"></div></div>
@@ -138,7 +138,7 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
     <div class="ctit" style="margin:0">📒 Fiados</div>
     <div style="display:flex;gap:4px">
-      <button onclick="toggleHistorialFiados()" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);border:none;padding:6px 10px;border-radius:6px;font-weight:700;font-size:11px;cursor:pointer" id="btn-hist-fiados">📜 Historial</button>
+      <button onclick="toggleHistorialFiados()" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);border:none;padding:8px 12px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer" id="btn-hist-fiados">📜 Historial</button>
     </div>
   </div>
   <div class="card res">
@@ -146,20 +146,20 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
     <div class="col"><div class="lbl">Activos</div><div class="val" id="f-activos" style="color:#FF9F1C">0</div></div>
   </div>
   <div style="display:flex;gap:6px;margin-bottom:8px">
-    <input id="fiado-input" placeholder="Nombre del cliente" maxlength="60" style="flex:1;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:13px;font-family:Nunito,sans-serif;outline:none">
-    <button onclick="agregarFiado()" style="background:#FFD93D;color:#000;border:none;padding:9px 16px;border-radius:8px;font-weight:800;font-size:13px;cursor:pointer">+ Agregar</button>
+    <input id="fiado-input" placeholder="Nombre del cliente" maxlength="60" style="flex:1;padding:12px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:15px;font-family:Nunito,sans-serif;outline:none">
+    <button onclick="agregarFiado()" style="background:#FFD93D;color:#000;border:none;padding:12px 18px;border-radius:10px;font-weight:800;font-size:15px;cursor:pointer">+ Agregar</button>
   </div>
   <div id="lista-fiados"></div>
 </div>
 
 <div id="v-config" style="display:none">
   <div class="ctit">⚙️ Configuración</div>
-  <div class="card" style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.8">
+  <div class="card" style="font-size:14px;color:rgba(255,255,255,.5);line-height:2">
     💾 Datos guardados localmente en este dispositivo<br>
     ☁️ <span id="cfg-supabase">Supabase no conectado</span><br>
-    <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
-      <button onclick="probarConexion()" style="padding:6px 14px;border-radius:6px;border:1px solid rgba(107,203,119,.4);background:rgba(107,203,119,.15);color:#6BCB77;font-weight:700;font-size:11px;cursor:pointer">🔌 Probar conexion</button>
-      <button onclick="exportarDatos()" style="padding:6px 14px;border-radius:6px;border:1px solid rgba(77,150,255,.4);background:rgba(77,150,255,.15);color:#4D96FF;font-weight:700;font-size:11px;cursor:pointer">📥 Exportar datos</button>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+      <button onclick="probarConexion()" style="padding:8px 16px;border-radius:8px;border:1px solid rgba(107,203,119,.4);background:rgba(107,203,119,.15);color:#6BCB77;font-weight:700;font-size:13px;cursor:pointer">🔌 Probar conexion</button>
+      <button onclick="exportarDatos()" style="padding:8px 16px;border-radius:8px;border:1px solid rgba(77,150,255,.4);background:rgba(77,150,255,.15);color:#4D96FF;font-weight:700;font-size:13px;cursor:pointer">📥 Exportar datos</button>
     </div>
     <div id="cst" style="margin-top:6px;font-weight:700;display:none"></div>
   </div>
@@ -426,8 +426,16 @@ async function sincronizar() {
       });
       if (cambios) { guardar(); pintarTodo(); }
     }
-    // Fiados sync (merge local + remoto)
+    // Fiados sync (upload local + merge remoto)
     try {
+      // Upload local fiados to Supabase in bulk
+      var fiadosUpload = [];
+      for (var fi = 0; fi < fiados.length; fi++) {
+        var f = fiados[fi];
+        fiadosUpload.push({id:f.id,cliente:f.cliente,bolis:f.bolis,fecha:f.fecha,estado:f.estado});
+      }
+      if (fiadosUpload.length > 0) await supabase.from("fiados").upsert(fiadosUpload, {onConflict:"id"});
+      // Download remote fiados and merge
       var fr = await supabase.from("fiados").select("*").order("id", {ascending:false});
       if (!fr.error && fr.data) {
         var localesPorId = {};
@@ -603,7 +611,7 @@ function pintarHistorial() {
   var filtro = (document.getElementById("hist-search") || {}).value || "";
   lista.innerHTML = "";
   var mostrados = 0;
-  if (dias.length === 0) { lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2);padding:30px'>Sin registros aun</div>"; return; }
+  if (dias.length === 0) { lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2);padding:40px 20px;font-size:15px'>Sin registros aun</div>"; return; }
   for (var i = 0; i < dias.length; i++) {
     var k = dias[i], t = totales(k), diaData = getDia(k);
     var fechaTxt = fechaLinda(k);
@@ -615,9 +623,9 @@ function pintarHistorial() {
     var saboresHtml = "";
     for (var si = 0; si < SABORES.length; si++) {
       var sv = diaData[SABORES[si].id] || 0;
-      if (sv > 0) saboresHtml += '<div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span>'+SABORES[si].emoji+' '+SABORES[si].nombre+'</span><span style="color:#6BCB77">'+sv+'</span></div>';
+      if (sv > 0) saboresHtml += '<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span>'+SABORES[si].emoji+' '+SABORES[si].nombre+'</span><span style="color:#6BCB77;font-weight:700">'+sv+'</span></div>';
     }
-    d.innerHTML = '<div style="display:flex;justify-content:space-between" onclick="toggleHistDetalle(this)"><b>'+fechaTxt+'</b> <span style="color:#FFD93D;font-weight:900">'+cop(t.ganancia)+'</span></div><div style="font-size:11px;color:rgba(255,255,255,.3)">'+t.bolis+" bolis</div><div class='hist-det' style='display:none;margin-top:8px;border-top:1px solid rgba(255,255,255,.06);padding-top:6px'>"+saboresHtml+"</div>";
+    d.innerHTML = '<div style="display:flex;justify-content:space-between" onclick="toggleHistDetalle(this)"><b style="font-size:14px">'+fechaTxt+'</b> <span style="color:#FFD93D;font-weight:900;font-size:15px">'+cop(t.ganancia)+'</span></div><div style="font-size:13px;color:rgba(255,255,255,.3)">'+t.bolis+" bolis</div><div class='hist-det' style='display:none;margin-top:10px;border-top:1px solid rgba(255,255,255,.06);padding-top:8px'>"+saboresHtml+"</div>";
     lista.appendChild(d);
   }
   if (filtro && mostrados === 0) lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2);padding:30px'>Sin resultados para \""+filtro+"\"</div>";
@@ -636,7 +644,7 @@ function pintarStats() {
   var kpis = document.getElementById("kpis");
   if (!kpis) return;
   if (dias.length === 0) {
-    var msg = "<div style='color:rgba(255,255,255,.3);padding:20px;text-align:center'>Registra ventas para ver estadisticas</div>";
+    var msg = "<div style='color:rgba(255,255,255,.3);padding:30px;text-align:center;font-size:15px'>Registra ventas para ver estadisticas</div>";
     kpis.innerHTML = msg;
     document.getElementById("lista-meses").innerHTML = msg;
     document.getElementById("ranking").innerHTML = msg;
@@ -690,7 +698,7 @@ function pintarStats() {
           if (SABORES[sj].id === sArr[si].id) {
             var pct = Math.round((sArr[si].total / d.bolis) * 100);
             var barW = Math.round((sArr[si].total / maxSabor) * 100);
-            saboresHtml += '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span style="font-size:16px;width:24px;text-align:center">'+SABORES[sj].emoji+'</span><span style="flex:1;font-size:11px;font-weight:700">'+SABORES[sj].nombre+'</span><span style="color:#6BCB77;font-weight:800;font-size:12px;min-width:24px;text-align:right">'+sArr[si].total+'</span><span style="color:rgba(255,255,255,.3);font-size:9px;min-width:30px;text-align:right">('+pct+'%)</span></div>';
+            saboresHtml += '<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span style="font-size:18px;width:28px;text-align:center">'+SABORES[sj].emoji+'</span><span style="flex:1;font-size:13px;font-weight:700">'+SABORES[sj].nombre+'</span><span style="color:#6BCB77;font-weight:800;font-size:14px;min-width:28px;text-align:right">'+sArr[si].total+'</span><span style="color:rgba(255,255,255,.3);font-size:11px;min-width:34px;text-align:right">('+pct+'%)</span></div>';
             break;
           }
         }
@@ -698,7 +706,7 @@ function pintarStats() {
       var div = document.createElement("div");
       div.className = "card";
       div.style.cursor = "pointer";
-      div.innerHTML = '<div onclick="toggleMesDetalle(this)" style="display:flex;justify-content:space-between;align-items:center"><div><b style="font-size:13px">'+nomMes+' '+partes[0]+'</b><div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px">⭐ '+bestNom+(worst?(' · 👎 '+worstNom):'')+'</div></div><span style="color:#FFD93D;font-weight:900">'+cop(d.ganancia)+'</span></div><div style="display:flex;gap:12px;margin-top:4px;font-size:11px;color:rgba(255,255,255,.4)"><span>'+d.bolis+' bolis</span><span>'+d.dias+' dias</span><span>Prom: '+cop(Math.round(d.ganancia/d.dias))+'</span></div><div class="mes-det" style="display:none;margin-top:8px;border-top:1px solid rgba(255,255,255,.06);padding-top:6px">'+saboresHtml+'</div>';
+      div.innerHTML = '<div onclick="toggleMesDetalle(this)" style="display:flex;justify-content:space-between;align-items:center"><div><b style="font-size:15px">'+nomMes+' '+partes[0]+'</b><div style="font-size:12px;color:rgba(255,255,255,.3);margin-top:3px">⭐ '+bestNom+(worst?(' · 👎 '+worstNom):'')+'</div></div><span style="color:#FFD93D;font-weight:900;font-size:16px">'+cop(d.ganancia)+'</span></div><div style="display:flex;gap:14px;margin-top:6px;font-size:13px;color:rgba(255,255,255,.4)"><span>'+d.bolis+' bolis</span><span>'+d.dias+' dias</span><span>Prom: '+cop(Math.round(d.ganancia/d.dias))+'</span></div><div class="mes-det" style="display:none;margin-top:10px;border-top:1px solid rgba(255,255,255,.06);padding-top:8px">'+saboresHtml+'</div>';
       listaMeses.appendChild(div);
     }
   }
@@ -720,9 +728,9 @@ function pintarStats() {
     for (var i = 0; i < porSabor.length; i++) {
       var pct = Math.round((porSabor[i].total / totalGeneral) * 100);
       var barW = Math.round((porSabor[i].total / maxTotal) * 100);
-      rk.innerHTML += '<div style="margin-bottom:6px"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px;width:28px;text-align:center">'+porSabor[i].emoji+'</span><span style="flex:1;font-size:12px;font-weight:700">'+porSabor[i].nombre+'</span><span style="color:#6BCB77;font-weight:800;font-size:13px">'+porSabor[i].total+'</span><span style="color:rgba(255,255,255,.3);font-size:10px">('+pct+'%)</span><span style="color:#FFD93D;font-weight:700;font-size:11px;min-width:50px;text-align:right">'+cop(porSabor[i].ganancia)+'</span></div><div style="margin-top:2px;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden"><div style="height:100%;width:'+barW+'%;background:linear-gradient(90deg,#6BCB77,#FFD93D);border-radius:2px;transition:width .3s"></div></div></div>';
+      rk.innerHTML += '<div style="margin-bottom:8px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:22px;width:32px;text-align:center">'+porSabor[i].emoji+'</span><span style="flex:1;font-size:14px;font-weight:700">'+porSabor[i].nombre+'</span><span style="color:#6BCB77;font-weight:800;font-size:15px">'+porSabor[i].total+'</span><span style="color:rgba(255,255,255,.3);font-size:11px">('+pct+'%)</span><span style="color:#FFD93D;font-weight:700;font-size:13px;min-width:55px;text-align:right">'+cop(porSabor[i].ganancia)+'</span></div><div style="margin-top:3px;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden"><div style="height:100%;width:'+barW+'%;background:linear-gradient(90deg,#6BCB77,#FFD93D);border-radius:3px;transition:width .3s"></div></div></div>';
     }
-    rk.innerHTML += '<div style="display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:rgba(255,255,255,.2)"><span>Total: '+totalGeneral+' bolis</span><span>'+cop(tg)+'</span></div>';
+    rk.innerHTML += '<div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:rgba(255,255,255,.2)"><span>Total: '+totalGeneral+' bolis</span><span>'+cop(tg)+'</span></div>';
   }
 }
 
@@ -763,7 +771,7 @@ function pintarFiados() {
   var mostrar = mostrarHistorialFiados ? pagados : pendientes;
 
   if (mostrar.length === 0) {
-    lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2);padding:40px 20px;font-size:13px'>" + (mostrarHistorialFiados ? "📜 No hay historial de fiados aun" : "✅ No hay fiados pendientes") + "</div>";
+    lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2);padding:40px 20px;font-size:15px'>" + (mostrarHistorialFiados ? "📜 No hay historial de fiados aun" : "✅ No hay fiados pendientes") + "</div>";
     return;
   }
 
