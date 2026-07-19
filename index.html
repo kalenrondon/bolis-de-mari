@@ -103,6 +103,7 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
 
 <div id="v-historial" style="display:none">
   <div class="ctit">📅 Historial (<span id="ndias">0</span> dias)</div>
+  <input id="hist-search" placeholder="Buscar fecha (ej: Mar 2026)" oninput="pintarHistorial()" style="width:100%;padding:9px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:#fff;font-size:13px;font-family:Nunito,sans-serif;outline:none;margin-bottom:8px">
   <div id="lista-hist"></div>
 </div>
 
@@ -347,10 +348,15 @@ function pintarHistorial() {
   var dias = Object.keys(DB).sort(function(a,b) { return b.localeCompare(a); });
   var e = document.getElementById("ndias"); if (e) e.textContent = dias.length;
   var lista = document.getElementById("lista-hist"); if (!lista) return;
+  var filtro = (document.getElementById("hist-search") || {}).value || "";
   lista.innerHTML = "";
+  var mostrados = 0;
   if (dias.length === 0) { lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2);padding:30px'>Sin registros aun</div>"; return; }
   for (var i = 0; i < dias.length; i++) {
     var k = dias[i], t = totales(k), diaData = getDia(k);
+    var fechaTxt = fechaLinda(k);
+    if (filtro && fechaTxt.toLowerCase().indexOf(filtro.toLowerCase()) < 0 && k.indexOf(filtro) < 0) continue;
+    mostrados++;
     var d = document.createElement("div");
     d.className = "card";
     d.style.cursor = "pointer";
@@ -359,9 +365,10 @@ function pintarHistorial() {
       var sv = diaData[SABORES[si].id] || 0;
       if (sv > 0) saboresHtml += '<div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span>'+SABORES[si].emoji+' '+SABORES[si].nombre+'</span><span style="color:#6BCB77">'+sv+'</span></div>';
     }
-    d.innerHTML = '<div style="display:flex;justify-content:space-between" onclick="toggleHistDetalle(this)"><b>'+fechaLinda(k)+'</b> <span style="color:#FFD93D;font-weight:900">'+cop(t.ganancia)+'</span></div><div style="font-size:11px;color:rgba(255,255,255,.3)">'+t.bolis+" bolis</div><div class='hist-det' style='display:none;margin-top:8px;border-top:1px solid rgba(255,255,255,.06);padding-top:6px'>"+saboresHtml+"</div>";
+    d.innerHTML = '<div style="display:flex;justify-content:space-between" onclick="toggleHistDetalle(this)"><b>'+fechaTxt+'</b> <span style="color:#FFD93D;font-weight:900">'+cop(t.ganancia)+'</span></div><div style="font-size:11px;color:rgba(255,255,255,.3)">'+t.bolis+" bolis</div><div class='hist-det' style='display:none;margin-top:8px;border-top:1px solid rgba(255,255,255,.06);padding-top:6px'>"+saboresHtml+"</div>";
     lista.appendChild(d);
   }
+  if (filtro && mostrados === 0) lista.innerHTML = "<div class='card' style='text-align:center;color:rgba(255,255,255,.2);padding:30px'>Sin resultados para \""+filtro+"\"</div>";
 }
 function toggleHistDetalle(el) {
   var det = el.parentElement.querySelector(".hist-det");
@@ -484,7 +491,7 @@ function pintarFiados() {
     div.className = "frow";
 
     if (f.estado === "pendiente") {
-      div.innerHTML = '<div class="fhead"><div class="fnombre">' + f.cliente + '</div><div class="festado pendiente">Pendiente</div></div><div class="fmon" style="margin:6px 0"><div style="display:flex;align-items:center;gap:6px"><button class="bm" onclick="cambiarBolis('+f.id+',-1)" style="width:34px;height:34px;border-radius:8px;border:none;font-weight:900;font-size:18px;cursor:pointer;background:rgba(255,100,100,.18);color:#FF8787">−</button><div class="scant" style="min-width:30px;text-align:center;font-weight:900;font-size:20px;color:#6BCB77">'+f.bolis+'</div><button class="bp" onclick="cambiarBolis('+f.id+',1)" style="width:34px;height:34px;border-radius:8px;border:none;font-weight:900;font-size:18px;cursor:pointer;background:rgba(107,203,119,.22);color:#6BCB77">+</button><span style="margin-left:8px;font-weight:900;font-size:16px;color:#FFD93D">'+cop(debe)+'</span></div></div><div class="fbtn"><button class="btn-pagar" onclick="pagarFiado('+f.id+')">✅ Pagar</button></div>';
+      div.innerHTML = '<div class="fhead"><div class="fnombre">' + f.cliente + '</div><div class="festado pendiente">Pendiente</div></div><div class="fmon" style="margin:6px 0"><div style="display:flex;align-items:center;gap:6px"><button class="bm" onclick="cambiarBolis('+f.id+',-1)" style="width:34px;height:34px;border-radius:8px;border:none;font-weight:900;font-size:18px;cursor:pointer;background:rgba(255,100,100,.18);color:#FF8787">−</button><div class="scant" style="min-width:30px;text-align:center;font-weight:900;font-size:20px;color:#6BCB77">'+f.bolis+'</div><button class="bp" onclick="cambiarBolis('+f.id+',1)" style="width:34px;height:34px;border-radius:8px;border:none;font-weight:900;font-size:18px;cursor:pointer;background:rgba(107,203,119,.22);color:#6BCB77">+</button><span style="margin-left:8px;font-weight:900;font-size:16px;color:#FFD93D">'+cop(debe)+'</span></div></div><div class="fbtn"><button class="btn-pagar" onclick="pagarFiado('+f.id+')">✅ Pagar</button><button class="btn-cancel" onclick="eliminarFiado('+f.id+')">🗑️</button></div>';
     } else {
       div.innerHTML = '<div class="fhead"><div class="fnombre">' + f.cliente + '</div><div class="festado pagado">Pagado</div></div><div class="fdet">' + fechaLinda(f.fecha) + ' · ' + f.bolis + ' bolis · ' + cop(debe) + '</div>';
     }
@@ -516,6 +523,19 @@ function cambiarBolis(id, delta) {
     if (fiados[i].id === id) {
       fiados[i].bolis = Math.max(0, fiados[i].bolis + delta);
       guardarFiadosLocal();
+      pintarFiados();
+      return;
+    }
+  }
+}
+
+function eliminarFiado(id) {
+  for (var i = 0; i < fiados.length; i++) {
+    if (fiados[i].id === id) {
+      if (!confirm("Eliminar fiado de "+fiados[i].cliente+"?")) return;
+      fiados.splice(i, 1);
+      guardarFiadosLocal();
+      toast("Fiado eliminado");
       pintarFiados();
       return;
     }
@@ -560,6 +580,7 @@ try {
   cargar();
   pintarVentas();
   initSupabase();
+  setInterval(function() { if (supabase) sincronizar(); }, 30000);
 } catch(e) {
   var _err = document.createElement("div");
   _err.style.cssText = "position:fixed;bottom:0;left:0;right:0;background:#c00;color:#fff;padding:12px;font-size:13px;z-index:99999;text-align:center;font-weight:700";
