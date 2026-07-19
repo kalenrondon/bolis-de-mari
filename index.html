@@ -84,14 +84,15 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
 <div class="badge" id="badge">💾 Local</div>
 
 <div class="nav">
-  <button class="nb on" id="nb-ventas" onclick="ir('ventas')">🧊 Ventas</button>
-  <button class="nb" id="nb-historial" onclick="ir('historial')">📅 Historial</button>
-  <button class="nb" id="nb-stats" onclick="ir('stats')">📊 Stats</button>
-  <button class="nb" id="nb-fiados" onclick="ir('fiados')">📒 Fiados</button>
-  <button class="nb" id="nb-config" onclick="ir('config')">⚙️ Config</button>
+  <button class="nb on" id="nb-ventas" onclick="ir('ventas')" title="Ventas del día">🧊 Ventas</button>
+  <button class="nb" id="nb-fiados" onclick="ir('fiados')" title="Clientes con crédito">📒 Fiados</button>
+  <button class="nb" id="nb-historial" onclick="ir('historial')" title="Historial por día">📅 Historial</button>
+  <button class="nb" id="nb-stats" onclick="ir('stats')" title="Estadísticas">📊 Stats</button>
+  <button class="nb" id="nb-config" onclick="ir('config')" title="Configuración">⚙️ Config</button>
 </div>
 
 <div id="v-ventas">
+  <div id="semanal" style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:4px"></div>
   <div class="card res" id="resumen">
     <div class="col"><div class="lbl">Vendidos</div><div class="val" style="color:#6BCB77" id="r-total">0</div></div>
     <div class="col"><div class="lbl">Ganancia</div><div class="val" style="color:#FFD93D" id="r-gan">$0</div></div>
@@ -141,10 +142,15 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
   <div class="card" style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.8">
     💾 Datos guardados localmente en este dispositivo<br>
     ☁️ <span id="cfg-supabase">Supabase no conectado</span><br>
-    <button onclick="probarConexion()" style="margin-top:6px;padding:6px 14px;border-radius:6px;border:1px solid rgba(107,203,119,.4);background:rgba(107,203,119,.15);color:#6BCB77;font-weight:700;font-size:11px;cursor:pointer">🔌 Probar conexion</button>
+    <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
+      <button onclick="probarConexion()" style="padding:6px 14px;border-radius:6px;border:1px solid rgba(107,203,119,.4);background:rgba(107,203,119,.15);color:#6BCB77;font-weight:700;font-size:11px;cursor:pointer">🔌 Probar conexion</button>
+      <button onclick="exportarDatos()" style="padding:6px 14px;border-radius:6px;border:1px solid rgba(77,150,255,.4);background:rgba(77,150,255,.15);color:#4D96FF;font-weight:700;font-size:11px;cursor:pointer">📥 Exportar datos</button>
+    </div>
     <div id="cst" style="margin-top:6px;font-weight:700;display:none"></div>
   </div>
 </div>
+
+<div id="biblia" style="padding:12px 10px 4px;text-align:center;font-size:11px;color:rgba(255,255,255,.2);font-style:italic;line-height:1.4;pointer-events:none"></div>
 
 <div class="toast" id="toast"></div>
 
@@ -167,6 +173,24 @@ var SABORES = [
   {id:"guanabana",nombre:"Guanabana",emoji:"💚",precio:1000},
   {id:"maracuya",nombre:"Maracuya",emoji:"🟡",precio:1000},
   {id:"chocolate",nombre:"Chocolate",emoji:"🍫",precio:1000}
+];
+
+var VERSICULOS = [
+  "Todo lo puedo en Cristo que me fortalece. — Filipenses 4:13",
+  "El Señor es mi pastor, nada me falta. — Salmo 23:1",
+  "Bendice, alma mía, al Señor, y no olvides ninguno de sus beneficios. — Salmo 103:2",
+  "Dios es nuestro amparo y fortaleza, nuestro pronto auxilio en las tribulaciones. — Salmo 46:1",
+  "El que comenzó en vosotros la buena obra, la perfeccionará hasta el día de Jesucristo. — Filipenses 1:6",
+  "No temas, porque yo estoy contigo. — Isaías 41:10",
+  "Pedid, y se os dará; buscad, y hallaréis. — Mateo 7:7",
+  "El amor es paciente, es bondadoso. — 1 Corintios 13:4",
+  "Alegraos en el Señor siempre. Otra vez digo: ¡Alegraos! — Filipenses 4:4",
+  "El hombre generoso prospera. — Proverbios 11:25",
+  "Bienaventurado el que teme al Señor. — Salmo 112:1",
+  "Todo tiene su tiempo. — Eclesiastés 3:1",
+  "El principio de la sabiduría es el temor del Señor. — Proverbios 9:10",
+  "Sed fuertes y valientes. No temáis. — Deuteronomio 31:6",
+  "Porque de tal manera amó Dios al mundo, que dio a su Hijo unigénito. — Juan 3:16"
 ];
 
 // ============================
@@ -305,6 +329,27 @@ function toast(msg) {
   toastT = setTimeout(function() { el.classList.remove("on"); }, 2000);
 }
 
+function beep() {
+  try {
+    var ac = new (window.AudioContext || window.webkitAudioContext)();
+    var o = ac.createOscillator();
+    var g = ac.createGain();
+    o.connect(g); g.connect(ac.destination);
+    o.frequency.value = 800; o.type = "sine";
+    g.gain.setValueAtTime(0.1, ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.1);
+    o.start(ac.currentTime); o.stop(ac.currentTime + 0.1);
+    setTimeout(function() { ac.close(); }, 200);
+  } catch(e) {}
+}
+
+function mostrarVersiculo() {
+  var el = document.getElementById("biblia");
+  if (!el) return;
+  var hoyNum = new Date().getDate();
+  el.textContent = "✝️ "+VERSICULOS[hoyNum % VERSICULOS.length];
+}
+
 // ============================
 // VENDER
 // ============================
@@ -313,6 +358,7 @@ function vender(id, delta) {
   if (!DB[k]) DB[k] = {};
   DB[k][id] = Math.max(0, (DB[k][id] || 0) + delta);
   guardar();
+  beep();
   pintarVentas();
   programarSync();
 }
@@ -331,6 +377,24 @@ function pintarVentas() {
     for (var i = 0; i < dias.length; i++) { var tt = totales(dias[i]); tb += tt.bolis; tg += tt.ganancia; }
     e = document.getElementById("r-prom"); if (e) e.textContent = Math.round(tb/dias.length);
     e = document.getElementById("r-promgan"); if (e) e.textContent = cop(Math.round(tg/dias.length));
+  }
+  // Resumen semanal
+  var semEl = document.getElementById("semanal");
+  if (semEl) {
+    var ahora = new Date();
+    var inicioSem = new Date(ahora); inicioSem.setDate(ahora.getDate() - ahora.getDay()); // domingo
+    var inicioSemPasada = new Date(inicioSem); inicioSemPasada.setDate(inicioSem.getDate() - 7);
+    var swB = 0, swG = 0, spB = 0, spG = 0;
+    for (var i = 0; i < dias.length; i++) {
+      var dp = dias[i].split("-");
+      var df = new Date(parseInt(dp[0]), parseInt(dp[1])-1, parseInt(dp[2]));
+      var tt = totales(dias[i]);
+      if (df >= inicioSem) { swB += tt.bolis; swG += tt.ganancia; }
+      else if (df >= inicioSemPasada) { spB += tt.bolis; spG += tt.ganancia; }
+    }
+    var diff = swG - spG;
+    var signo = diff >= 0 ? "📈" : "📉";
+    semEl.innerHTML = "Esta semana: "+swB+" bolis · "+cop(swG)+"  |  Semana pasada: "+spB+" bolis · "+cop(spG)+"  "+signo+" "+cop(Math.abs(diff));
   }
   var lista = document.getElementById("lista-sabores");
   if (!lista) return;
@@ -524,7 +588,9 @@ function pintarFiados() {
     if (f.estado === "pendiente") {
       div.innerHTML = '<div class="fhead"><div class="fnombre">' + f.cliente + '</div><div class="festado pendiente">Pendiente</div></div><div class="fmon" style="margin:6px 0"><div style="display:flex;align-items:center;gap:6px"><button class="bm" onclick="cambiarBolis('+f.id+',-1)" style="width:34px;height:34px;border-radius:8px;border:none;font-weight:900;font-size:18px;cursor:pointer;background:rgba(255,100,100,.18);color:#FF8787">−</button><div class="scant" style="min-width:30px;text-align:center;font-weight:900;font-size:20px;color:#6BCB77">'+f.bolis+'</div><button class="bp" onclick="cambiarBolis('+f.id+',1)" style="width:34px;height:34px;border-radius:8px;border:none;font-weight:900;font-size:18px;cursor:pointer;background:rgba(107,203,119,.22);color:#6BCB77">+</button><span style="margin-left:8px;font-weight:900;font-size:16px;color:#FFD93D">'+cop(debe)+'</span></div></div><div class="fbtn"><button class="btn-pagar" onclick="pagarFiado('+f.id+')">✅ Pagar</button><button class="btn-cancel" onclick="eliminarFiado('+f.id+')">🗑️</button></div>';
     } else {
-      div.innerHTML = '<div class="fhead"><div class="fnombre">' + f.cliente + '</div><div class="festado pagado">Pagado</div></div><div class="fdet">' + fechaLinda(f.fecha) + ' · ' + f.bolis + ' bolis · ' + cop(debe) + '</div>';
+      div.innerHTML = '<div class="fhead"><div class="fnombre">' + f.cliente + '</div><div class="festado pagado" style="background:rgba(107,203,119,.2);color:#6BCB77">✅ Pagado</div></div><div class="fdet" style="color:rgba(255,255,255,.35)">' + fechaLinda(f.fecha) + ' · ' + f.bolis + ' bolis · <span style="color:rgba(107,203,119,.5);font-weight:700">' + cop(debe) + '</span></div>';
+      div.style.border = "1px solid rgba(107,203,119,.15)";
+      div.style.background = "rgba(107,203,119,.06)";
     }
     lista.appendChild(div);
   }
@@ -535,6 +601,16 @@ function toggleHistorialFiados() {
   var btn = document.getElementById("btn-hist-fiados");
   if (btn) btn.textContent = mostrarHistorialFiados ? "🔙 Actuales" : "📜 Historial";
   pintarFiados();
+}
+
+function exportarDatos() {
+  var data = {fecha:new Date().toISOString(),ventas:JSON.parse(JSON.stringify(DB)),fiados:JSON.parse(JSON.stringify(fiados))};
+  var blob = new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a"); a.href = url; a.download = "bolis-de-mari-export-"+hoy()+".json";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast("✅ Datos exportados");
 }
 
 function agregarFiado() {
@@ -610,6 +686,7 @@ function ir(v) {
 try {
   cargar();
   pintarVentas();
+  mostrarVersiculo();
   initSupabase();
   setInterval(function() { if (supabase) sincronizar(); }, 30000);
 } catch(e) {
