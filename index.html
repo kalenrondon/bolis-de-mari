@@ -90,6 +90,7 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
   </div>
 </div>
 <div class="badge" id="badge">💾 Local</div>
+<div id="biblia" style="padding:8px 8px 6px;margin-bottom:6px;text-align:center;font-size:12px;color:rgba(255,217,61,.8);font-style:italic;line-height:1.4;background:rgba(255,217,61,.08);border:1px solid rgba(255,217,61,.15);border-radius:10px;font-weight:600"></div>
 
 <div class="nav">
   <button class="nb on" id="nb-ventas" onclick="ir('ventas')" title="Ventas del día">🧊 Ventas</button>
@@ -158,8 +159,6 @@ button{cursor:pointer;font-family:Nunito,sans-serif}
   </div>
 </div>
 
-<div id="biblia" style="padding:12px 10px 4px;text-align:center;font-size:11px;color:rgba(255,255,255,.2);font-style:italic;line-height:1.4;pointer-events:none"></div>
-
 <div class="toast" id="toast"></div>
 
 <script>
@@ -184,21 +183,37 @@ var SABORES = [
 ];
 
 var VERSICULOS = [
-  "Todo lo puedo en Cristo que me fortalece. — Filipenses 4:13",
-  "El Señor es mi pastor, nada me falta. — Salmo 23:1",
-  "Bendice, alma mía, al Señor, y no olvides ninguno de sus beneficios. — Salmo 103:2",
-  "Dios es nuestro amparo y fortaleza, nuestro pronto auxilio en las tribulaciones. — Salmo 46:1",
-  "El que comenzó en vosotros la buena obra, la perfeccionará hasta el día de Jesucristo. — Filipenses 1:6",
-  "No temas, porque yo estoy contigo. — Isaías 41:10",
-  "Pedid, y se os dará; buscad, y hallaréis. — Mateo 7:7",
-  "El amor es paciente, es bondadoso. — 1 Corintios 13:4",
-  "Alegraos en el Señor siempre. Otra vez digo: ¡Alegraos! — Filipenses 4:4",
-  "El hombre generoso prospera. — Proverbios 11:25",
-  "Bienaventurado el que teme al Señor. — Salmo 112:1",
-  "Todo tiene su tiempo. — Eclesiastés 3:1",
-  "El principio de la sabiduría es el temor del Señor. — Proverbios 9:10",
-  "Sed fuertes y valientes. No temáis. — Deuteronomio 31:6",
-  "Porque de tal manera amó Dios al mundo, que dio a su Hijo unigénito. — Juan 3:16"
+  "🙏 Todo lo puedo en Cristo que me fortalece. ¡A seguir adelante, Mari! — Filipenses 4:13",
+  "💪 Dios es tu amparo y fortaleza. Hoy será un gran día de ventas con la ayuda del Señor.",
+  "👨‍👩‍👧‍👧 Familia es bendición: Rosa, Jose, Chachi, Cristina y Alfredo. ¡Dios los guarde siempre!",
+  "🌟 El amor de Dios se refleja en tu familia. Rosa y Jose son prueba de su fidelidad.",
+  "✨ Cada boli que vendes es una semilla. Dios multiplica tu esfuerzo, Mari.",
+  "💛 Chachi y Cristina son un regalo del cielo. ¡Dios bendiga a tus hermanas!",
+  "🙌 El Señor te sonríe hoy, Mari. Con tu esfuerzo y su gracia, ¡este negocio prospera!",
+  "📖 El que comenzó en vosotros la buena obra, la perfeccionará. — Filipenses 1:6",
+  "🎉 Rosa, Jose, Chachi, Cristina, Alfredo... ¡qué familia tan hermosa! Dios los bendiga hoy.",
+  "🕊️ No temas, porque yo estoy contigo. — Isaías 41:10. Mari, Dios está en cada venta.",
+  "🔥 Eres bendición para tu familia, Mari. Tu trabajo digno es ejemplo para Rosa y todos.",
+  "💎 Pedid, y se os dará; buscad, y hallaréis. — Mateo 7:7",
+  "🌈 Tu familia te admira, Mari. Sigue adelante con fe y dedicación.",
+  "🎯 El hombre generoso prospera. — Proverbios 11:25. Tu negocio crece porque das con amor.",
+  "🙏 Señor, bendice a Mari, a Rosa, Jose, Chachi, Cristina y Alfredo. Protégelos hoy.",
+  "💪 Dios no te dio espíritu de temor, sino de poder, amor y dominio propio. ¡A vender!",
+  "👑 Eres cabeza de familia, Mari. Tu ejemplo inspira a Rosa y a todos.",
+  "✨ Cada sabor de boli es una oportunidad. Dios pone clientes en tu camino.",
+  "💛 Chachi y Alfredo, Cristina y Jose... tu familia te rodea de amor. ¡Valor, Mari!",
+  "🌟 Alegraos en el Señor siempre. Otra vez digo: ¡Alegraos! — Filipenses 4:4",
+  "🔥 Mari, con Dios y tu familia a tu lado, ¡no hay meta que no alcances!",
+  "🕊️ Bienaventurada la que teme al Señor. — Salmo 112:1. Tu fe mueve montañas.",
+  "💎 Rosa y Jose son fruto de tu amor y esfuerzo. Dios bendice tu hogar.",
+  "🙌 El Señor es tu pastor, nada te falta. ¡Confía en Él hoy! — Salmo 23:1",
+  "🎯 Mari, cada día es una nueva oportunidad. Tu familia cree en ti.",
+  "💛 Que bonita familia tienes, Mari: Chachi, Cristina, Alfredo, Rosa, Jose. ¡Eres rica en amor!",
+  "🌟 Todo tiene su tiempo. — Eclesiastés 3:1. Tiempo de vender, tiempo de prosperar.",
+  "🔥 El poder de Dios se perfecciona en tu debilidad. ¡Él te da fuerzas, Mari!",
+  "👨‍👩‍👧‍👧 Tu familia ora por ti. Rosa, Jose, Chachi, Cristina y Alfredo te aman.",
+  "💪 Sed fuertes y valientes. No temáis. — Deuteronomio 31:6",
+  "🎉 Mari, Dios tiene planes de bien para ti y tu familia. ¡Este es tu año!"
 ];
 
 // ============================
