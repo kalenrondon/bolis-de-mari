@@ -374,6 +374,10 @@ function toggleHistDetalle(el) {
   var det = el.parentElement.querySelector(".hist-det");
   if (det) det.style.display = det.style.display === "none" ? "block" : "none";
 }
+function toggleMesDetalle(el) {
+  var det = el.parentElement.querySelector(".mes-det");
+  if (det) det.style.display = det.style.display === "none" ? "block" : "none";
+}
 
 function pintarStats() {
   var dias = Object.keys(DB).sort();
@@ -398,11 +402,16 @@ function pintarStats() {
   var meses = {};
   for (var i = 0; i < dias.length; i++) {
     var mes = dias[i].substring(0, 7);
-    if (!meses[mes]) meses[mes] = {bolis:0,ganancia:0,dias:0};
+    if (!meses[mes]) meses[mes] = {bolis:0,ganancia:0,dias:0,sabores:{}};
     var t = totales(dias[i]);
+    var dd = getDia(dias[i]);
     meses[mes].bolis += t.bolis;
     meses[mes].ganancia += t.ganancia;
     meses[mes].dias++;
+    for (var si = 0; si < SABORES.length; si++) {
+      var sv = dd[SABORES[si].id] || 0;
+      if (sv > 0) meses[mes].sabores[SABORES[si].id] = (meses[mes].sabores[SABORES[si].id] || 0) + sv;
+    }
   }
   var ordenMeses = Object.keys(meses).sort();
   var listaMeses = document.getElementById("lista-meses");
@@ -413,9 +422,31 @@ function pintarStats() {
       var d = meses[m];
       var partes = m.split("-");
       var nomMes = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"][parseInt(partes[1])-1];
+      // Sabores del mes ordenados
+      var sArr = [];
+      for (var sid in d.sabores) sArr.push({id:sid,total:d.sabores[sid]});
+      sArr.sort(function(a,b) { return b.total - a.total; });
+      var best = sArr.length > 0 ? sArr[0] : null;
+      var worst = sArr.length > 1 ? sArr[sArr.length-1] : null;
+      var bestNom = "", worstNom = "";
+      if (best) for (var si=0;si<SABORES.length;si++) if(SABORES[si].id===best.id) { bestNom = SABORES[si].emoji+" "+SABORES[si].nombre; break; }
+      if (worst) for (var si=0;si<SABORES.length;si++) if(SABORES[si].id===worst.id) { worstNom = SABORES[si].emoji+" "+SABORES[si].nombre; break; }
+      var saboresHtml = "";
+      var maxSabor = sArr.length > 0 ? sArr[0].total : 1;
+      for (var si = 0; si < sArr.length; si++) {
+        for (var sj = 0; sj < SABORES.length; sj++) {
+          if (SABORES[sj].id === sArr[si].id) {
+            var pct = Math.round((sArr[si].total / d.bolis) * 100);
+            var barW = Math.round((sArr[si].total / maxSabor) * 100);
+            saboresHtml += '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)"><span style="font-size:16px;width:24px;text-align:center">'+SABORES[sj].emoji+'</span><span style="flex:1;font-size:11px;font-weight:700">'+SABORES[sj].nombre+'</span><span style="color:#6BCB77;font-weight:800;font-size:12px;min-width:24px;text-align:right">'+sArr[si].total+'</span><span style="color:rgba(255,255,255,.3);font-size:9px;min-width:30px;text-align:right">('+pct+'%)</span></div>';
+            break;
+          }
+        }
+      }
       var div = document.createElement("div");
       div.className = "card";
-      div.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">'+nomMes+' '+partes[0]+'</b><span style="color:#FFD93D;font-weight:900">'+cop(d.ganancia)+'</span></div><div style="display:flex;gap:12px;margin-top:4px;font-size:11px;color:rgba(255,255,255,.4)"><span>'+d.bolis+' bolis</span><span>'+d.dias+' dias</span><span>Prom: '+cop(Math.round(d.ganancia/d.dias))+'</span></div>';
+      div.style.cursor = "pointer";
+      div.innerHTML = '<div onclick="toggleMesDetalle(this)" style="display:flex;justify-content:space-between;align-items:center"><div><b style="font-size:13px">'+nomMes+' '+partes[0]+'</b><div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px">⭐ '+bestNom+(worst?(' · 👎 '+worstNom):'')+'</div></div><span style="color:#FFD93D;font-weight:900">'+cop(d.ganancia)+'</span></div><div style="display:flex;gap:12px;margin-top:4px;font-size:11px;color:rgba(255,255,255,.4)"><span>'+d.bolis+' bolis</span><span>'+d.dias+' dias</span><span>Prom: '+cop(Math.round(d.ganancia/d.dias))+'</span></div><div class="mes-det" style="display:none;margin-top:8px;border-top:1px solid rgba(255,255,255,.06);padding-top:6px">'+saboresHtml+'</div>';
       listaMeses.appendChild(div);
     }
   }
