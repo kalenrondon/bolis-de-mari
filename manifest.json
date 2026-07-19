@@ -5,13 +5,21 @@
   "display": "standalone",
   "background_color": "#0a1f35",
   "theme_color": "#0a1f35",
-  "description": "App de ventas para Bolis de Mari - Control de inventario, fiados y estadísticas",
+  "description": "App de ventas para Bolis de Mari",
   "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "100x100",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "icon.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
+  ]
+}
   ]
 }
